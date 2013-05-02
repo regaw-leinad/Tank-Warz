@@ -1,8 +1,8 @@
 local tank = EntityManager.derive("base")
 
 function tank:load(x, y, data)
-    self.bodyImage = TextureManager.get("tank")
-    self.barrelImage = TextureManager.get("barrel")
+    self.bodyImage = TextureManager.getImage("tank")
+    self.barrelImage = TextureManager.getImage("barrel")
     self.barrelAngle = 0
     self:setPos(x, y)
     self.barrelSpeed = 30

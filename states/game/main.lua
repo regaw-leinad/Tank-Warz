@@ -1,9 +1,9 @@
 function load()
     love.graphics.setBackgroundColor(0, 245, 255)
 
-    EntityManager.create("terrain")
+    EntityManager.create("terrain", 0 , 0, { texture = "dirt" })
     --EntityManager.create("projectile", 10, 300, { power = 520, angle = 45 })
-    tank = EntityManager.create("tank", 200, 450)
+    --tank = EntityManager.create("tank", 200, 450)
 end
 
 function love.update(dt)

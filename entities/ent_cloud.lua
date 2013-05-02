@@ -1,7 +1,8 @@
 local cloud = EntityManager.derive("base")
 
 function cloud:load(x, y, data)
-    self.image = TextureManager.get("cloud")
+    self.image = TextureManager.getImage("cloud")
+    math.randomseed(os.time())
     self.speed = math.random(1, 4)
     self:setPos(-math.random(256, 400), math.random(0, 200))
 end
@@ -20,6 +21,7 @@ function cloud:draw()
 end
 
 function cloud:die()
+    math.randomseed(os.time())
     EntityManager.create("cloud", -math.random(256, 400), math.random(0, 200))
 end
 
