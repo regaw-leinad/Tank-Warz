@@ -30,7 +30,7 @@ function EntityManager.derive(name)
     end
 end
 
-function EntityManager.create(name, x, y)
+function EntityManager.create(name, x, y, data)
     local state = StateManager.getCurrentState()
 
     if not objects[state] then objects[state] = {} end
@@ -38,7 +38,7 @@ function EntityManager.create(name, x, y)
 	if register[name] then
 		local ent = register[name]()
         id = id + 1
-		ent:load(x, y)
+		ent:load(x, y, data)
 		ent.id = id
         ent.type = name
         objects[state][id] = ent
@@ -84,8 +84,9 @@ function EntityManager.destroy(id)
     local state = StateManager.getCurrentState()
 
     if objects[state][id] then
+        print("Destroying entity id " .. id)
+
         if objects[state][id].die then
-            print("Destroying entity id " .. id)
             objects[state][id]:die()
         end
 

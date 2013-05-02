@@ -1,9 +1,9 @@
 function load()
-    love.graphics.setBackgroundColor(128, 0, 0)
+    love.graphics.setBackgroundColor(0, 245, 255)
 
     EntityManager.create("terrain")
-
-    EntityManager.create("projectile")
+    --EntityManager.create("projectile", 10, 300, { power = 520, angle = 45 })
+    tank = EntityManager.create("tank", 200, 450)
 end
 
 function love.update(dt)
@@ -12,4 +12,10 @@ end
 
 function love.draw()
     EntityManager.draw()
+end
+
+function love.keypressed(k)
+    if k == " " then
+        tank:shoot()
+    end
 end

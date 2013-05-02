@@ -1,6 +1,6 @@
 local ent = EntityManager.derive("base")
 
-function ent:load()
+function ent:load(x, y, data)
 	self.w = 64
 	self.h = 64
 end
@@ -26,4 +26,4 @@ function ent:draw()
 	love.graphics.rectangle("fill", x, y, w, h)
 end
 
-return ent;
+return ent

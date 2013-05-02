@@ -5,7 +5,7 @@ base.y = 0
 base.w = 0
 base.h = 0
 
-function base:load(x, y)
+function base:load(x, y, data)
 end
 
 function base:setPos(x, y)
@@ -30,4 +30,4 @@ function base:getID()
     return self.id
 end
 
-return base;
+return base

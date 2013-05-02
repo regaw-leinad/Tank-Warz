@@ -2,7 +2,7 @@ local terrain = EntityManager.derive("base")
 
 terrain.v = {}
 
-function terrain:load(x, y)
+function terrain:load(x, y, data)
     local WIDTH_MIN = 10
     local WIDTH_BUFFER = 50
     local HEIGHT_BUFFER = 20
@@ -55,4 +55,4 @@ function terrain:draw()
     love.graphics.polygon("fill", self.v)
 end
 
-return terrain;
+return terrain
