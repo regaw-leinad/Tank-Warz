@@ -1,3 +1,12 @@
+--[[
+    ent_terrain.lua
+    Randomly generated terrain
+
+    Authors:
+        Dan Wager
+        Daniel Rolandi
+--]]
+
 local terrain = EntityManager.derive("base")
 
 -- Daniel Rolandi's random terrain generation
@@ -62,7 +71,12 @@ function terrain:load(x, y, data)
 end
 
 function terrain:draw()
+    love.graphics.setColor(255, 255, 255, 255)
     love.graphics.draw(self.terrain, self.coords[1], self.coords[2])
+end
+
+function terrain:getCoords()
+    return self.coords
 end
 
 return terrain
