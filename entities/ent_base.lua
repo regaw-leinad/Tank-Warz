@@ -1,3 +1,11 @@
+--[[
+    ent_base.lua
+    The base entity all others derive from
+
+    Authors:
+        Dan Wager
+--]]
+
 local base = {}
 
 base.x = 0
@@ -5,7 +13,7 @@ base.y = 0
 base.w = 0
 base.h = 0
 
-function base:load(x, y, data)
+function base:load(data)
 end
 
 function base:setPos(x, y)
@@ -14,7 +22,7 @@ function base:setPos(x, y)
 end
 
 function base:getPos()
-	return self.x, self.y;
+	return self.x, self.y
 end
 
 function base:setSize(w, h)
@@ -23,11 +31,15 @@ function base:setSize(w, h)
 end
 
 function base:getSize()
-    return self.w, self.h;
+    return self.w, self.h
 end
 
 function base:getID()
     return self.id
+end
+
+function base:getType()
+    return self.type
 end
 
 return base

@@ -1,29 +1,29 @@
-local ent = EntityManager.derive("base")
+--[[
+    ent_box.lua
+    A black box, just as an example
 
-function ent:load(x, y, data)
-	self.w = 64
-	self.h = 64
+    Authors:
+        Dan Wager
+--]]
+
+local box = EntityManager.derive("base")
+
+function box:load(data)
+	-- Init data if not passed so we don't have errors
+	if not data then data = {} end
+
+	self:setPos(data.x or 0, data.y or 0)
+	self:setSize(data.w or 64, data.h or 64)
+	self.speed = data.speed or 32
 end
 
-function ent:setSize(w, h)
-	self.w = w
-	self.h = h
+function box:update(dt)
+	self.y = self.y + self.speed * dt
 end
 
-function ent:getSize()
-	return self.w, self.h;
-end
-
-function ent:update(dt)
-	self.y = self.y + 32 * dt
-end
-
-function ent:draw()
-	local x, y = self:getPos()
-	local w, h = self:getSize()
-
+function box:draw()
 	love.graphics.setColor(0, 0, 0, 255)
-	love.graphics.rectangle("fill", x, y, w, h)
+	love.graphics.rectangle("fill", self.x, self.y, self.w, self.h)
 end
 
-return ent
+return box

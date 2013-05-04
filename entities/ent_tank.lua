@@ -8,33 +8,40 @@
 
 local tank = EntityManager.derive("base")
 
-function tank:load(x, y, data)
+function tank:load(data)
+    -- Init data if not passed so we don't have errors
     if not data then data = {} end
 
-    self.bodyImage = TextureManager.getImage("tank")
-    self.barrelImage = TextureManager.getImage("barrel")
-
-    self:setPos(x or 0, y or 0)
-
+    self.bodyImage = TextureManager.getImage(data.bodyImage or "tank")
+    self.barrelImage = TextureManager.getImage(data.barrelImage or "barrel")
+    self:setPos(data.x or 0, data.y or 0)
     self.scale = data.scale or 1
-
-    self.power = 10
-
+    self.power = data.power or 10
     self.barrelAngle = data.barrelAngle or 0
     self.barrelSpeed = data.barrelSpeed or 50
-
-    self.maxHp = 100
-    self.hp = 100
+    self.maxHp = data.maxHp or 100
+    self.hp = data. hp or 100
+    self.btnShoot = data.btnShoot or " "
+    self.btnRotateCW = data.btnRotateCW or "e"
+    self.btnRotateCCW = data.btnRotateCCW or "q"
 end
 
 function tank:update(dt)
-    ---[[
+    --[[
     if self.barrelAngle > 0 then
         self.barrelAngle = 0
     elseif self.barrelAngle < -90 then
         self.barrelAngle = -90
     end
     --]]
+
+    if love.keyboard.isDown(self.btnRotateCW) then
+        self.barrelAngle = self.barrelAngle + self.barrelSpeed * dt
+    end
+
+    if love.keyboard.isDown(self.btnRotateCCW) then
+        self.barrelAngle = self.barrelAngle - self.barrelSpeed * dt
+    end
 
     if self.hp <= 0 then
         EntityManager.destroy(self.id)
@@ -62,7 +69,9 @@ function tank:draw()
 end
 
 function tank:damage(n)
-    self.hp = self.hp - n
+    if self:isAlive() then
+        self.hp = self.hp - n
+    end
 end
 
 function tank:getBarrelRads()
@@ -102,20 +111,18 @@ function tank:getMaxHp()
 end
 
 function tank:shoot()
-    local a = self:getBarrelRads()
-    local x, y = self:getBarrelPos()
+    if self:isAlive() then
+        local a = self:getBarrelRads()
+        local x, y = self:getBarrelPos()
 
-    EntityManager.create("projectile",
-        x + math.cos(a) * (self.barrelImage:getWidth() - 10 * self.scale) * self.scale,
-        y + math.sin(a) * (self.barrelImage:getWidth() - 10 * self.scale) * self.scale,
-        { power = self.power, angle = tank.barrelAngle, scale = self.scale })
-end
-
-function tank:rotateBarrel(dir, dt)
-    if dir == "cw" then
-        self.barrelAngle = self.barrelAngle + self.barrelSpeed * dt
-    elseif dir == "ccw" then
-        self.barrelAngle = self.barrelAngle - self.barrelSpeed * dt
+        EntityManager.create("projectile", {
+            image = projectiles[proj],
+            x = x + math.cos(a) * (self.barrelImage:getWidth() - 10 * self.scale) * self.scale,
+            y = y + math.sin(a) * (self.barrelImage:getWidth() - 10 * self.scale) * self.scale,
+            power = self.power,
+            angle = tank.barrelAngle,
+            scale = self.scale
+            })
     end
 end
 

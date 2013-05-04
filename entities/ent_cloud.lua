@@ -8,21 +8,23 @@
 
 local cloud = EntityManager.derive("base")
 
-function cloud:load(x, y, data)
+local SPEED = 32
+
+function cloud:load(data)
+    -- Init data if not passed so we don't have errors
     if not data then data = {} end
 
-    self.image = TextureManager.getImage("cloud")
-    math.randomseed(os.time())
-
+    self.image = TextureManager.getImage(data.image or "cloud")
+    self.respawn = data.respawn or true
     self.scale = data.scale or 1
-    self.speed = data.speed or math.random(1, 4)
-    self:setPos(-math.random(256, 400), math.random(0, 200))
+    self.speedScale = data.speedScale or math.random(1, 4)
+    self:setPos(data.x, data.y)
 end
 
 function cloud:update(dt)
-    self.x = self.x + 32 * self.speed * dt
+    self.x = self.x + SPEED * self.speedScale * dt
 
-    if self.x + self.image:getWidth() / 2 >= (SCREEN_WIDTH) then
+    if self.x - self.image:getWidth() / 2 >= SCREEN_WIDTH then
         EntityManager.destroy(self.id)
     end
 end
@@ -35,13 +37,18 @@ function cloud:draw()
         0,
         self.scale,
         self.scale,
-        self.image:getWidth(),
-        self.image:getHeight())
+        self.image:getWidth() / 2,
+        self.image:getHeight() / 2)
+
+    -- Shows the x/y point
+    love.graphics.setColor(0, 0, 0, 255)
+    love.graphics.circle("fill", self.x, self.y, 5)
 end
 
 function cloud:die()
-    math.randomseed(os.time())
-    EntityManager.create("cloud", -math.random(256, 400), math.random(0, 200), { scale = self.scale })
+    if self.respawn then
+        EntityManager.create("cloud", { x = -math.random(256, 300), y = math.random(50, 300)})
+    end
 end
 
 return cloud

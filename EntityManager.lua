@@ -30,7 +30,7 @@ function EntityManager.derive(name)
     end
 end
 
-function EntityManager.create(name, x, y, data)
+function EntityManager.create(name, data)
     local state = StateManager.getCurrentState()
 
     if not objects[state] then objects[state] = {} end
@@ -38,7 +38,7 @@ function EntityManager.create(name, x, y, data)
 	if register[name] then
 		local ent = register[name]()
         id = id + 1
-		ent:load(x, y, data)
+		ent:load(data)
 		ent.id = id
         ent.type = name
         objects[state][id] = ent

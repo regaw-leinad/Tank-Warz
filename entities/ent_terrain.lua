@@ -59,24 +59,37 @@ local function generateTerrain(xStart, yStart, wMin, wBuff, hBuff)
     return v
 end
 
-function terrain:load(x, y, data)
-    local WIDTH_MIN = 10
-    local WIDTH_BUFFER = 50
-    local HEIGHT_BUFFER = 20
-    local START_Y = 450
-    local START_X = 0
+function terrain:load(data)
+    -- Init data if not passed so we don't have errors
+    if not data then data = {} end
 
-    self.coords = generateTerrain(START_X, START_Y, WIDTH_MIN, WIDTH_BUFFER, HEIGHT_BUFFER)
+    local widthMin = data.widthMin or 10
+    local widthBuf = data.widthBuf or 50
+    local heightBuf = data.heightBuf or 20
+    local startX = data.startX or 0
+    local startY = data.startY or 450
+
+    self.coords = generateTerrain(startX, startY, widthMin, widthBuf, heightBuf)
     self.terrain = TextureManager.makeTexturedPoly(self.coords, TextureManager.getImageData(data.texture))
+
+    --print(inspect(self.coords))
 end
 
 function terrain:draw()
-    love.graphics.setColor(255, 255, 255, 255)
-    love.graphics.draw(self.terrain, self.coords[1], self.coords[2])
+    -- love.graphics.setColor(255, 255, 255, 255)
+    -- love.graphics.draw(self.terrain, 0, SCREEN_HEIGHT - self.terrain:getHeight() + 1)
+
+    --love.graphics.polygon("fill", self.coords)
+    love.graphics.setColor(0, 0, 0, 100)
+    love.graphics.polygon("line", self.coords)
 end
 
 function terrain:getCoords()
     return self.coords
+end
+
+function terrain:getPointCount()
+    return #self.coords - 4
 end
 
 return terrain

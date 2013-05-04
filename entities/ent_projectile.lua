@@ -1,44 +1,54 @@
-local ent = EntityManager.derive("base")
+--[[
+    ent_projectile.lua
+    A projectile with physics support
 
--- data needs: power, angle (in degrees), scale
-function ent:load(x, y, data)
+    Authors:
+        Dan Wager
+--]]
+
+local projectile = EntityManager.derive("base")
+
+function projectile:load(data)
+    -- Init data if not passed so we don't have errors
     if not data then data = {} end
 
-    self.image = TextureManager.getImage("projectile")
-
+    self.image = TextureManager.getImage(data.image or "projectile")
     self.scale = data.scale or 1
-    self.startTime = love.timer.getTime()
-
+    self.speedScale = data.speedScale or 1
     self.vx = (data.power or 1) * math.cos(math.rad(data.angle or 0)) * METER_SIZE
-    self.vy = data.power * math.sin(math.rad(data.angle or 0)) * METER_SIZE
-
-    self.x = x
-    self.y = y
-    self.initY = y
+    self.vy = (data.power or 1) * math.sin(math.rad(data.angle or 0)) * METER_SIZE
+    self.x = data.x or 0
+    self.y = data.y or 0
+    self.initY = self.y
 end
 
-function ent:update(dt)
-    dt = dt
+function projectile:update(dt)
+    dt = dt * self.speedScale
 
     self.vy = self.vy + 9.8 * METER_SIZE * dt
 
     self.x = self.x + self.vx * dt
     self.y = self.y + self.vy * dt
 
-    if self.x >= SCREEN_WIDTH or self.y >= SCREEN_HEIGHT then
+    if worldCollide(self) then
+        EntityManager.destroy(self.id)
+    end
+
+    if self.x >= SCREEN_WIDTH or self.y >= SCREEN_HEIGHT or self.x <= 0 then
         EntityManager.destroy(self.id)
     end
 end
 
-function ent:draw()
-    local ox, oy = self:getImageOffsets()
-
+function projectile:draw()
     love.graphics.setColor(255, 255, 255, 255)
-    love.graphics.draw(self.image, self.x, self.y, 0, self.scale, self.scale, ox, oy)
+    love.graphics.draw(self.image,
+        self.x,
+        self.y,
+        0,
+        self.scale,
+        self.scale,
+        self.image:getWidth() / 2,
+        self.image:getHeight() / 2)
 end
 
-function ent:getImageOffsets()
-    return (self.image:getWidth() * .5 * self.scale), (self.image:getHeight() * .5 * self.scale)
-end
-
-return ent
+return projectile
