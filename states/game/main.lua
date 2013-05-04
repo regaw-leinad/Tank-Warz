@@ -11,7 +11,7 @@ function load()
     end
 
     world.terrain = EntityManager.create("terrain", { texture = "dirt" })
-    world.tank = EntityManager.create("tank", { x = 180, y = 400, scale = .2})
+    world.tank = EntityManager.create("tank", { x = 180, y = 400, scale = .5})
     world.lastCollision = {}
     world.lastCollision.x = 0
     world.lastCollision.y = 0
@@ -19,6 +19,14 @@ end
 
 function love.update(dt)
     EntityManager.update(dt)
+
+    if WIND / METER_SIZE < 0 then
+        windDir = "left"
+    elseif WIND / METER_SIZE > 0 then
+        windDir = "right"
+    else
+        windDir = ""
+    end
 end
 
 function love.draw()
@@ -41,6 +49,7 @@ function love.draw()
     love.graphics.print("Terrain points: " .. world.terrain:getPointCount(), infoX, 80)
     love.graphics.print("Last Collision: " .. round(world.lastCollision.x) .. ", " .. round(world.lastCollision.y), infoX, 96)
     love.graphics.print("Current projectile: " .. projectiles[proj], infoX, 112)
+    love.graphics.print("Current wind: " .. WIND / METER_SIZE .. " " .. windDir, infoX, 128)
 
     love.graphics.print("Help", helpX, 10)
     love.graphics.print("--------", helpX, 18)
@@ -48,14 +57,15 @@ function love.draw()
     love.graphics.print("Press Q or E to rotate barrel", helpX, 48)
     love.graphics.print("Press A or Z to adjust power", helpX, 64)
     love.graphics.print("Press S or X to change projectile", helpX, 80)
-    love.graphics.print("Click on tank to damage (hitbox is outlined in red)", helpX, 96)
-    love.graphics.print("Press ESCAPE to quit", helpX, 112)
+    love.graphics.print("Press D or C to adjust wind", helpX, 96)
+    love.graphics.print("Click on tank to damage (hitbox is outlined in red)", helpX, 112)
+    love.graphics.print("Press ESCAPE to quit", helpX, 128)
 
     love.graphics.print("FPS: " .. tostring(love.timer.getFPS()), SCREEN_WIDTH - 60, 10)
 end
 
 function love.keypressed(k)
-    if k == " " and world.tank:isAlive() then
+    if k == " " then
         world.tank:shoot()
     end
 
@@ -68,11 +78,7 @@ function love.keypressed(k)
     end
 
     if k == "s" then
-        proj = proj + 1
-
-        if proj > #projectiles then
-            proj = 1
-        end
+        proj = proj % 4 + 1
 
         print(proj)
     end
@@ -85,6 +91,12 @@ function love.keypressed(k)
         end
 
         print(proj)
+    end
+
+    if k == "d" then
+        WIND = ((WIND / METER_SIZE) + 1) * METER_SIZE
+    elseif k == "c" then
+        WIND = ((WIND / METER_SIZE) - 1) * METER_SIZE
     end
 
     if k == 'escape' then

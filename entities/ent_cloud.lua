@@ -41,8 +41,8 @@ function cloud:draw()
         self.image:getHeight() / 2)
 
     -- Shows the x/y point
-    love.graphics.setColor(0, 0, 0, 255)
-    love.graphics.circle("fill", self.x, self.y, 5)
+    -- love.graphics.setColor(0, 0, 0, 255)
+    -- love.graphics.circle("fill", self.x, self.y, 5)
 end
 
 function cloud:die()

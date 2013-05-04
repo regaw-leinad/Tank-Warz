@@ -25,7 +25,8 @@ end
 function projectile:update(dt)
     dt = dt * self.speedScale
 
-    self.vy = self.vy + 9.8 * METER_SIZE * dt
+    self.vx = self.vx + WIND * dt
+    self.vy = self.vy + GRAVITY * dt
 
     self.x = self.x + self.vx * dt
     self.y = self.y + self.vy * dt
