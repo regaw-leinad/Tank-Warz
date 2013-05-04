@@ -11,7 +11,7 @@ function load()
     end
 
     world.terrain = EntityManager.create("terrain", { texture = "dirt" })
-    world.tank = EntityManager.create("tank", { x = 180, y = 400, scale = .5})
+    world.tank = EntityManager.create("tank", { x = 400, y = 400, scale = .5, direction = "left"})
     world.lastCollision = {}
     world.lastCollision.x = 0
     world.lastCollision.y = 0
@@ -43,7 +43,7 @@ function love.draw()
     love.graphics.setColor(0, 0, 0, 255)
     love.graphics.print("Info", infoX, 10)
     love.graphics.print("------", infoX, 18)
-    love.graphics.print("Barrel angle: " .. round(-world.tank:getBarrelDeg()), infoX, 32)
+    love.graphics.print("Barrel angle: " .. round(world.tank:getRelativeBarrelAngle()), infoX, 32)
     love.graphics.print("Power: " .. world.tank:getPower(), infoX, 48)
     love.graphics.print("HP: " .. world.tank:getHp() .. "/" .. world.tank:getMaxHp(), infoX, 64)
     love.graphics.print("Terrain points: " .. world.terrain:getPointCount(), infoX, 80)

@@ -8,6 +8,23 @@
 
 local tank = EntityManager.derive("base")
 
+--[[
+    data
+      bodyImage - name of tank texture
+      barrelImage - name of barrel texture
+      x - x-coord in world
+      y - y-coord in world
+      scale - image scale
+      power - initial tank power
+      barrelAngle - initial angle of barrel
+      barrelSpeed - speed of barrel movement
+      maxHp - max health
+      hp - initial health
+      btnShoot - KeyConstant for shooting a projectile
+      btnRotateCW - KeyConstant for rotating barrel CW
+      btnRotateCCW - KeyConstant for rotating barrel CCW
+      direction - Which way the tank faces
+--]]
 function tank:load(data)
     -- Init data if not passed so we don't have errors
     if not data then data = {} end
@@ -17,13 +34,23 @@ function tank:load(data)
     self:setPos(data.x or 0, data.y or 0)
     self.scale = data.scale or 1
     self.power = data.power or 10
-    self.barrelAngle = data.barrelAngle or 0
     self.barrelSpeed = data.barrelSpeed or 50
     self.maxHp = data.maxHp or 100
-    self.hp = data. hp or 100
+    self.hp = data.hp or 100
     self.btnShoot = data.btnShoot or " "
     self.btnRotateCW = data.btnRotateCW or "e"
     self.btnRotateCCW = data.btnRotateCCW or "q"
+
+    local dir = data.direction or "right"
+    if dir == "right" then
+        self.direction = 1
+        self.angleOffset = 0
+    elseif dir == "left" then
+        self.direction = -1
+        self.angleOffset = 180
+    end
+
+    self.barrelAngle = (data.barrelAngle or 0) + self.angleOffset
 end
 
 function tank:update(dt)
@@ -56,16 +83,26 @@ function tank:draw()
         bx,
         by,
         self:getBarrelRads(),
-        self.scale, self.scale,
+        self.scale,
+        self.scale,
         0,
         self.barrelImage:getHeight() / 2)
 
     love.graphics.draw(self.bodyImage,
-        self.x, self.y,
+        self.x,
+        self.y,
         0,
-        self.scale, self.scale,
+        self.scale * self.direction,
+        self.scale,
         self.bodyImage:getWidth() / 2,
         self.bodyImage:getHeight() / 2)
+
+    love.graphics.setColor(255, 0, 0, 255)
+    love.graphics.circle("fill", self.x, self.y, 5)
+end
+
+function tank:getScaledSize()
+    return self.bodyImage:getWidth() * self.scale, self.bodyImage:getHeight() * self.scale
 end
 
 function tank:damage(n)
@@ -82,16 +119,16 @@ function tank:getBarrelDeg()
     return self.barrelAngle
 end
 
+function tank:getRelativeBarrelAngle()
+    return (self.barrelAngle - self.angleOffset) * (self.direction * -1)
+end
+
 function tank:getPower()
     return self.power
 end
 
 function tank:isAlive()
     return self.hp > 0
-end
-
-function tank:getScaledSize()
-    return self.bodyImage:getWidth() * self.scale, self.bodyImage:getHeight() * self.scale
 end
 
 function tank:adjustPower(n)
@@ -115,14 +152,15 @@ function tank:shoot()
         local a = self:getBarrelRads()
         local x, y = self:getBarrelPos()
 
-        EntityManager.create("projectile", {
+        EntityManager.create("projectile",
+        {
             image = projectiles[proj],
             x = x + math.cos(a) * (self.barrelImage:getWidth() - 10 * self.scale) * self.scale,
             y = y + math.sin(a) * (self.barrelImage:getWidth() - 10 * self.scale) * self.scale,
             power = self.power,
             angle = tank.barrelAngle,
             scale = self.scale
-            })
+        })
     end
 end
 

@@ -14,6 +14,7 @@ function round(val, decimal)
     return math.floor(val + 0.5)
 end
 
+-- Checks if point px,py is inside of a defined box
 function insideBox(px, py, bx, by, bw, bh)
     if px > bx and px < bx + bw then
         if py > by and py < by + bh then
