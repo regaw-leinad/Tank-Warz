@@ -54,11 +54,11 @@ function tank:load(data)
 end
 
 function tank:update(dt)
-    --[[
-    if self.barrelAngle > 0 then
-        self.barrelAngle = 0
-    elseif self.barrelAngle < -90 then
-        self.barrelAngle = -90
+    ---[[
+    if self:getRelativeBarrelAngle() < 0 then
+        self.barrelAngle = 0 + self.angleOffset
+    elseif self:getRelativeBarrelAngle() > 90 then
+        self.barrelAngle = (90 * self.direction * -1) + self.angleOffset
     end
     --]]
 
