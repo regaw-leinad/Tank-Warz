@@ -70,18 +70,19 @@ function terrain:load(data)
     local startY = data.startY or 450
 
     self.coords = generateTerrain(startX, startY, widthMin, widthBuf, heightBuf)
+    self.polygons = polygonCut({1, 2, 3, 4}, self.coords)
     self.terrain = TextureManager.makeTexturedPoly(self.coords, TextureManager.getImageData(data.texture))
 
     --print(inspect(self.coords))
 end
 
 function terrain:draw()
-    -- love.graphics.setColor(255, 255, 255, 255)
-    -- love.graphics.draw(self.terrain, 0, SCREEN_HEIGHT - self.terrain:getHeight() + 1)
+    love.graphics.setColor(255, 255, 255, 255)
+    love.graphics.draw(self.terrain, 0, SCREEN_HEIGHT - self.terrain:getHeight() + 1)
 
     --love.graphics.polygon("fill", self.coords)
-    love.graphics.setColor(0, 0, 0, 100)
-    love.graphics.polygon("line", self.coords)
+    -- love.graphics.setColor(0, 0, 0, 100)
+    -- love.graphics.polygon("line", self.coords)
 end
 
 function terrain:getCoords()

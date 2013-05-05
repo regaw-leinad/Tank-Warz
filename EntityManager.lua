@@ -30,7 +30,7 @@ function EntityManager.derive(name)
     end
 end
 
-function EntityManager.create(name, data)
+function EntityManager.create(name, background, data)
     local state = StateManager.getCurrentState()
 
     if not objects[state] then objects[state] = {} end
@@ -41,6 +41,7 @@ function EntityManager.create(name, data)
 		ent:load(data)
 		ent.id = id
         ent.type = name
+        ent.background = background
         objects[state][id] = ent
 	    return objects[state][id]
 	else
@@ -70,11 +71,21 @@ function EntityManager.update(dt)
     end
 end
 
+function EntityManager.drawBackground()
+    local state = StateManager.getCurrentState()
+
+    for _,ent in pairs(objects[state]) do
+        if ent.background and ent.draw then
+            ent:draw()
+        end
+    end
+end
+
 function EntityManager.draw()
     local state = StateManager.getCurrentState()
 
     for _,ent in pairs(objects[state]) do
-        if ent.draw then
+        if not ent.background and ent.draw then
             ent:draw()
         end
     end

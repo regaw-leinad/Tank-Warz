@@ -8,6 +8,16 @@
 
 local projectile = EntityManager.derive("base")
 
+--[[
+    data
+      image - The projectile's image
+      scale - The image scale
+      speedScale - The projectile movement's time scale
+      power - The magnitude of the force on the projectile
+      angle - The angle of launch
+      x - The X coordinate
+      y - The Y coordinate
+--]]
 function projectile:load(data)
     -- Init data if not passed so we don't have errors
     if not data then data = {} end
@@ -19,7 +29,6 @@ function projectile:load(data)
     self.vy = (data.power or 1) * math.sin(math.rad(data.angle or 0)) * METER_SIZE
     self.x = data.x or 0
     self.y = data.y or 0
-    self.initY = self.y
 end
 
 function projectile:update(dt)

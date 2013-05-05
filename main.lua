@@ -14,5 +14,5 @@ function love.load()
     TextureManager.startup()
     EntityManager.startup()
 
-    StateManager.loadState("game")
+    StateManager.loadState("demo")
 end
