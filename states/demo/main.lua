@@ -30,7 +30,6 @@ function love.update(dt)
 end
 
 function love.draw()
-    EntityManager.drawBackground()
     EntityManager.draw()
 
     local sx, sy = world.tank:getPos()

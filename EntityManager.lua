@@ -71,7 +71,7 @@ function EntityManager.update(dt)
     end
 end
 
-function EntityManager.drawBackground()
+function EntityManager.draw()
     local state = StateManager.getCurrentState()
 
     for _,ent in pairs(objects[state]) do
@@ -79,10 +79,6 @@ function EntityManager.drawBackground()
             ent:draw()
         end
     end
-end
-
-function EntityManager.draw()
-    local state = StateManager.getCurrentState()
 
     for _,ent in pairs(objects[state]) do
         if not ent.background and ent.draw then
