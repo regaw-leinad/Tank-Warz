@@ -17,6 +17,7 @@ local projectile = EntityManager.derive("base")
       angle - The angle of launch
       x - The X coordinate
       y - The Y coordinate
+      damage - The damage this projectile deals
 --]]
 function projectile:load(data)
     -- Init data if not passed so we don't have errors
@@ -29,6 +30,7 @@ function projectile:load(data)
     self.vy = (data.power or 1) * math.sin(math.rad(data.angle or 0)) * METER_SIZE
     self.x = data.x or 0
     self.y = data.y or 0
+    self.damage = data.damage or 10
 end
 
 function projectile:update(dt)
@@ -40,7 +42,11 @@ function projectile:update(dt)
     self.x = self.x + self.vx * dt
     self.y = self.y + self.vy * dt
 
-    if worldCollide(self) then
+    if terrainCollide(self.x, self.y) then
+        EntityManager.destroy(self.id)
+    end
+
+    if tankCollide(self.x, self.y, self.damage) then
         EntityManager.destroy(self.id)
     end
 

@@ -77,6 +77,12 @@ end
 function terrain:draw()
     love.graphics.setColor(255, 255, 255, 255)
     love.graphics.draw(self.terrain, 0, SCREEN_HEIGHT - self.terrain:getHeight() + 1)
+
+    -- love.graphics.setColor(0, 0, 0, 255)
+    -- love.graphics.polygon("line", self.coords)
+    -- love.graphics.setColor(255, 255, 255, 100)
+    -- love.graphics.polygon("fill", self.coords)
+
 end
 
 function terrain:getCoords()

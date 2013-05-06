@@ -61,6 +61,26 @@ function EntityManager.get(id)
     end
 end
 
+function EntityManager.getAll(type)
+    local state = StateManager.getCurrentState()
+    local t = {}
+
+    if objects[state] then
+        for _,ent in pairs(objects[state]) do
+            if ent.type == type then
+                table.insert(t, ent)
+            end
+        end
+
+        if #t == 0 then
+            print("No entities of type \'" .. type .. "\'")
+            return false
+        else
+            return t
+        end
+    end
+end
+
 function EntityManager.update(dt)
     local state = StateManager.getCurrentState()
 

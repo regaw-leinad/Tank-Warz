@@ -41,6 +41,7 @@ function tank:load(data)
     self.btnShoot = data.btnShoot or " "
     self.btnRotateCW = data.btnRotateCW or "e"
     self.btnRotateCCW = data.btnRotateCCW or "q"
+    --self.bodyAngle = data.bodyAngle or 0
 
     local dir = data.direction or "right"
     if dir == "left" then
@@ -82,7 +83,7 @@ function tank:draw()
     love.graphics.draw(self.barrelImage,
         bx,
         by,
-        self:getBarrelRads(),
+        self:getBarrelRads(),-- + self.bodyAngle * self.direction * -1,
         self.scale,
         self.scale,
         0,
@@ -91,14 +92,11 @@ function tank:draw()
     love.graphics.draw(self.bodyImage,
         self.x,
         self.y,
-        0,
+        0,--self.bodyAngle * self.direction * -1,
         self.scale * self.direction,
         self.scale,
         self.bodyImage:getWidth() / 2,
         self.bodyImage:getHeight() / 2)
-
-    -- love.graphics.setColor(255, 0, 0, 255)
-    -- love.graphics.circle("fill", self.x, self.y, 5)
 end
 
 function tank:getScaledSize()
@@ -161,7 +159,7 @@ end
 
 function tank:shoot()
     if self:isAlive() then
-        local a = self:getBarrelRads()
+        local a = self:getBarrelRads()-- + self.bodyAngle * self.direction * -1
         local x, y = self:getBarrelPos()
 
         EntityManager.create("projectile", false,
@@ -170,8 +168,9 @@ function tank:shoot()
             x = x + math.cos(a) * (self.barrelImage:getWidth() - 10 * self.scale) * self.scale,
             y = y + math.sin(a) * (self.barrelImage:getWidth() - 10 * self.scale) * self.scale,
             power = self.power,
-            angle = tank.barrelAngle,
-            scale = self.scale
+            angle = self:getBarrelDeg(),
+            scale = self.scale,
+            damage = 10
         })
     end
 end
