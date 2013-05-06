@@ -17,12 +17,12 @@ function base:load(data)
 end
 
 function base:setPos(x, y)
-	self.x = x
-	self.y = y
+    self.x = x
+    self.y = y
 end
 
 function base:getPos()
-	return self.x, self.y
+    return self.x, self.y
 end
 
 function base:setSize(w, h)

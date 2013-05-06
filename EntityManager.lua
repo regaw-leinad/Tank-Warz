@@ -22,7 +22,7 @@ function EntityManager.startup()
 end
 
 function EntityManager.derive(name)
-	if register[name] then
+    if register[name] then
         return register[name]()
     else
         print("Entitiy \'" .. name .. "\' not registered")
@@ -35,19 +35,19 @@ function EntityManager.create(name, background, data)
 
     if not objects[state] then objects[state] = {} end
 
-	if register[name] then
-		local ent = register[name]()
+    if register[name] then
+        local ent = register[name]()
         id = id + 1
-		ent:load(data)
-		ent.id = id
+        ent:load(data)
+        ent.id = id
         ent.type = name
         ent.background = background
         objects[state][id] = ent
-	    return objects[state][id]
-	else
-		print("Entitiy \'" .. name .. "\' not registered")
-		return false
-	end
+        return objects[state][id]
+    else
+        print("Entitiy \'" .. name .. "\' not registered")
+        return false
+    end
 end
 
 function EntityManager.get(id)
