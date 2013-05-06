@@ -82,7 +82,7 @@ function TextureManager.getImageData(name)
 end
 
 -- Creates a textured image from a polygon and texture
-function TextureManager.makeTexturedPoly(poly, texture)
+function TextureManager.makeTexturedPoly(poly, cutPoly, texture)
     print("TextureManager.makeTexturedPoly()")
     local minX, maxX, minY, maxY
 
@@ -115,7 +115,9 @@ function TextureManager.makeTexturedPoly(poly, texture)
     love.graphics.translate(-minX, -minY)
 
     -- Draw the polygon (white)
-    love.graphics.polygon('fill', poly)
+    for _,triangle in pairs(cutPoly) do
+        love.graphics.polygon('fill', triangle)
+    end
 
     -- Reset the offset for global
     love.graphics.translate(minX, minY)

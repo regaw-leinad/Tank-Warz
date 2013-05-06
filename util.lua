@@ -24,3 +24,23 @@ function insideBox(px, py, bx, by, bw, bh)
 
     return false
 end
+
+function polygonCut(midX, midY, poly)
+    local t = {}
+
+    local count = 1
+    local tCount = 1
+
+    t[tCount] = { poly[count], poly[count + 1], midX, midY, poly[#poly - 1], poly[#poly] }
+
+    tCount = tCount + 1
+
+    while count < #poly - 4 do
+        t[tCount] = { poly[count], poly[count + 1], midX, midY, poly[count + 2], poly[count + 3] }
+
+        tCount = tCount + 1
+        count = count + 2
+    end
+
+    return t
+end
