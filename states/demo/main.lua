@@ -9,27 +9,16 @@ function load()
         EntityManager.create("cloud", true, { x = -math.random(100, 256), y = math.random(50, 300) })
     end
 
-    -- EntityManager.create("projectile", false,
-    -- {
-    --     image = "cloud",
-
-
-    -- })
-
-    local terrain = EntityManager.create("terrain", true, { texture = "dirt" })
-
-    local halfX = terrain:getPointCount() / 2
-
-
+    EntityManager.create("terrain", true, { startY = 500, heightBuf = 20, texture = "dirt" })
 
     EntityManager.create("tank",
         false,
         {
             x = 150,
             y = 350,
-            scale = .3,
-            direction = "right"
-            --bodyAngle = 45
+            scale = .4,
+            direction = "right",
+            barrelOffsetY = -16
         })
 
     EntityManager.create("tank",
@@ -37,31 +26,23 @@ function load()
         {
             x = 800,
             y = 400,
-            scale = .3,
+            scale = .4,
+            barrelOffsetY = -16,
             direction = "left",
             btnShoot = ".",
             btnRotateCW = "p",
             btnRotateCCW = "o"
-            --bodyAngle = 45
         })
-
-    print(#EntityManager.getAll("tank"))
 end
 
 function love.update(dt)
     EntityManager.update(dt)
-
-    if WIND / METER_SIZE < 0 then
-        windDir = "left"
-    elseif WIND / METER_SIZE > 0 then
-        windDir = "right"
-    else
-        windDir = ""
-    end
 end
 
 function love.draw()
     EntityManager.draw()
+
+    love.graphics.print(love.timer.getFPS(), 10, 10)
 end
 
 function love.keypressed(k)
@@ -103,12 +84,16 @@ function love.keypressed(k)
 end
 
 function love.mousepressed(x, y, btn)
-    local sx, sy = tank:getPos()
-    local sw, sh = tank:getScaledSize()
+    if btn == "l" then
+        for _,tank in pairs(EntityManager.getAll("tank")) do
+            local sx, sy = tank:getPos()
+            local sw, sh = tank:getScaledSize()
 
-    if insideBox(x, y, sx - sw / 2, sy - sh / 2, sw, sh) then
-        if (tank:isAlive()) then
-            tank:damage(10)
+            if insideBox(x, y, sx - sw / 2, sy - sh / 2, sw, sh) then
+                if (tank:isAlive()) then
+                    tank:damage(10)
+                end
+            end
         end
     end
 end

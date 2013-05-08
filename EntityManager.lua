@@ -10,13 +10,10 @@ local id = 0
 function EntityManager.startup()
     local files = love.filesystem.enumerate(path)
 
-    print("Loading entities...")
-
     for _,file in pairs(files) do
         if string.starts(file, prefix) then
             local name = file:gsub(prefix, ""):gsub(".lua", "")
             register[name] = love.filesystem.load(path .. file)
-            print("  " .. name)
         end
     end
 end
@@ -74,7 +71,7 @@ function EntityManager.getAll(type)
 
         if #t == 0 then
             print("No entities of type \'" .. type .. "\'")
-            return false
+            return {}
         else
             return t
         end
@@ -111,8 +108,6 @@ function EntityManager.destroy(id)
     local state = StateManager.getCurrentState()
 
     if objects[state][id] then
-        print("Destroying entity id " .. id)
-
         if objects[state][id].die then
             objects[state][id]:die()
         end
