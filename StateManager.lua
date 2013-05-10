@@ -1,7 +1,7 @@
 StateManager = {}
 
 local states = {}
-local path = "states/"
+local path
 local currentState = nil
 
 -- Sets all love callbacks to nil
@@ -22,10 +22,11 @@ local function clearLove()
 end
 
 -- Loads the states from the file system
-function StateManager.startup()
+function StateManager.startup(statePath)
+    path = statePath or "states/"
     local folders = love.filesystem.enumerate(path)
 
-    for _,state in pairs(folders) do
+    for _,state in ipairs(folders) do
         if love.filesystem.isDirectory(path .. state) and love.filesystem.exists(path .. state .. "/main.lua") then
             states[state] = {}
             states[state].loaded = false
@@ -39,20 +40,20 @@ end
 
 -- Loads a state from the file system
 -- Possibly destroy state before? Or let client do this first?
-function StateManager.loadState(state)
+function StateManager.load(state, args)
     if states[state] then
         clearLove()
         currentState = state
         states[state].loaded = true
         states[state].data()
-        load()
+        load(args)
     else
         print("Error loading state \'".. state .. "\'")
     end
 end
 
 -- Loads a state from the file system
-function StateManager.resumeState(state)
+function StateManager.resume(state)
     if states[state] then
         clearLove()
         currentState = state
@@ -63,8 +64,7 @@ function StateManager.resumeState(state)
     end
 end
 
--- Loads a state from the file system
-function StateManager.destroyState(state)
+function StateManager.destroy(state)
     if states[state] and states[state].loaded then
         if state == currentState then
             clearLove()

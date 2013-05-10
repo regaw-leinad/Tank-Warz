@@ -1,12 +1,11 @@
 TextureManager = {}
 
 local textures = {}
-local path = "textures/"
+local path
 local prefix = "tex_"
 
 -- Applies texture to a canvas' image data
 local function texturize(target, texture)
-    print("texturize()")
 
     -- This defines how all the pixels are transformed
     -- this method is passed to (imageData):mapPixel
@@ -50,7 +49,8 @@ local function loadAll()
     end
 end
 
-function TextureManager.startup()
+function TextureManager.startup(texPath)
+    path = texPath or "textures/"
     loadAll()
 end
 
@@ -83,7 +83,6 @@ end
 
 -- Creates a textured image from a polygon and texture
 function TextureManager.makeTexturedPoly(poly, cutPoly, texture)
-    print("TextureManager.makeTexturedPoly()")
     local minX, maxX, minY, maxY
 
     -- Set up the min and max x & y values of the polygon

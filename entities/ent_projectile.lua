@@ -25,7 +25,7 @@ function projectile:load(data)
 
     self.image = TextureManager.getImage(data.image or "projectile")
     self.scale = data.scale or 1
-    self.speedScale = data.speedScale or 1
+    self.speedScale = data.speedScale or 1.2
     self.vx = (data.power or 1) * math.cos(math.rad(data.angle or 0)) * METER_SIZE
     self.vy = (data.power or 1) * math.sin(math.rad(data.angle or 0)) * METER_SIZE
     self.x = data.x or 0

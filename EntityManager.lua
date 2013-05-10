@@ -2,12 +2,14 @@ EntityManager = {}
 
 local objects = {}
 local register = {}
-local path = "entities/"
+local path
 local prefix = "ent_"
 local id = 0
 
 -- Loads the entities from all the states' entities folder
-function EntityManager.startup()
+function EntityManager.startup(entPath)
+    path = entPath or "entities/"
+
     local files = love.filesystem.enumerate(path)
 
     for _,file in pairs(files) do
@@ -58,24 +60,42 @@ function EntityManager.get(id)
     end
 end
 
-function EntityManager.getAll(type)
+function EntityManager.getAll(entType)
     local state = StateManager.getCurrentState()
     local t = {}
 
     if objects[state] then
         for _,ent in pairs(objects[state]) do
-            if ent.type == type then
+            if ent.type == entType then
                 table.insert(t, ent)
             end
         end
 
-        if #t == 0 then
-            print("No entities of type \'" .. type .. "\'")
-            return {}
-        else
+        if #t > 0 then
             return t
+        else
+            print("No entities of type \'" .. entType .. "\'")
+            return {}
+        end
+    else
+        print("No entites in state...")
+        return nil
+    end
+end
+
+function EntityManager.getCount(entType)
+    local state = StateManager.getCurrentState()
+    local count = 0
+
+    if objects[state] then
+        for _,ent in pairs(objects[state]) do
+            if ent.type == entType then
+                count = count + 1
+            end
         end
     end
+
+    return count
 end
 
 function EntityManager.update(dt)

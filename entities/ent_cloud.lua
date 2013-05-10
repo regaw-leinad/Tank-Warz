@@ -14,11 +14,13 @@ function cloud:load(data)
     -- Init data if not passed so we don't have errors
     if not data then data = {} end
 
+    self.x = data.x or -math.random(256, 300)
+    self.y = data.y or math.random(50, 200)
     self.image = TextureManager.getImage(data.image or "cloud")
     self.respawn = data.respawn or true
     self.scale = data.scale or 1
     self.speedScale = data.speedScale or math.random(1, 4)
-    self:setPos(data.x, data.y)
+    self:setPos(self.x, self.y)
 end
 
 function cloud:update(dt)

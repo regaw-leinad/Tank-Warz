@@ -9,10 +9,11 @@ function love.load()
     require("TextureManager")
     require("EntityManager")
     require("StateManager")
+    require("LevelManager")
 
-    StateManager.startup()
-    TextureManager.startup()
-    EntityManager.startup()
+    StateManager.startup("states/")
+    TextureManager.startup("textures/")
+    EntityManager.startup("entities/")
 
-    StateManager.loadState("demo")
+    StateManager.load("game", "ahhh")
 end
