@@ -1,6 +1,5 @@
 TankManager = {}
 
-
 local tanks =
 {
     ["red"] =
@@ -12,16 +11,53 @@ local tanks =
         scale = .125,
         power = 10,
         barrelAngle = 0,
-        barrelSpeed = 50,
+        barrelSpeed = 30,
         maxHp = 100,
-        hp = 100,
-        btnShoot =
+        hp = 100
+    },
 
+    ["grey"] =
+    {
+        image = "tank_grey",
+        barrelImage = "tank_grey_barrel",
+        barrelOffsetX = 0,
+        barrelOffsetY = 0,
+        barrelPivotOffset = 9,
+        barrelOnTop = true,
+        scale = 1,
+        power = 20,
+        barrelAngle = 0,
+        barrelSpeed = 50,
+        maxHp = 200,
+        hp = 200
     }
-
-
-
-
 }
 
-tanks
+local function get(tank)
+    if tanks[tank] then
+        return shallowCopy(tanks[tank])
+    else
+        print("No tank \'" .. tank .. "\'")
+        return nil
+    end
+end
+
+function TankManager.getData(tank)
+    return get(tank)
+end
+
+function TankManager.create(tank, x, y, direction)
+    local tankData = get(tank)
+
+    tankData["x"] = x
+    tankData["y"] = y
+    tankData["direction"] = direction
+
+    if tankData then
+        EntityManager.create("tank", false, tankData)
+    end
+end
+
+function TankManager.getCount()
+    return EntityManager.getCount("tank")
+end

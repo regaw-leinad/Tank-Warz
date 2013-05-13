@@ -55,7 +55,7 @@ function TextureManager.startup(texPath)
 end
 
 function TextureManager.getPath(name)
-    if textures[name].path then
+    if textures[name] then
         return textures[name].path
     else
         print("\'" .. name .. "\' is not a valid texture")
@@ -64,7 +64,7 @@ function TextureManager.getPath(name)
 end
 
 function TextureManager.getImage(name)
-    if textures[name].imageData then
+    if textures[name] then
         return love.graphics.newImage(textures[name].imageData)
     else
         print("\'" .. name .. "\' is not a valid texture")
@@ -73,7 +73,7 @@ function TextureManager.getImage(name)
 end
 
 function TextureManager.getImageData(name)
-    if textures[name].imageData then
+    if textures[name] then
         return textures[name].imageData
     else
         print("\'" .. name .. "\' is not a valid texture")

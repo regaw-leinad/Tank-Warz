@@ -16,6 +16,7 @@ local tank = EntityManager.derive("base")
       barrelImage - The name of the barrel texture
       barrelOffsetX - The X offset of the barrel from tank's x
       barrelOffsetY - The Y offset of the barrel from tank's y
+      barrelPivotOffset - The X offset for the pivot (Y is always center)
       scale - The image scale
       power - The initial tank power
       barrelAngle - The initial angle of the barrel
@@ -34,10 +35,12 @@ function tank:load(data)
     if not data then data = {} end
 
     -- Set properties
-    self.image = TextureManager.getImage(data.image or "tank")
-    self.barrelImage = TextureManager.getImage(data.barrelImage or "barrel")
+    self.image = TextureManager.getImage(data.image or "tank_red")
+    self.barrelImage = TextureManager.getImage(data.barrelImage or "tank_red_barrel")
     self.barrelOffsetX = data.barrelOffsetX or 0
     self.barrelOffsetY = data.barrelOffsetY or 0
+    self.barrelPivotOffset = data.barrelPivotOffset or 0
+    self.barrelOnTop = data.barrelOnTop or false
     self:setPos(data.x or 0, data.y or 0)
     self.scale = data.scale or 1
     self.power = data.power or 10
@@ -64,39 +67,24 @@ function tank:load(data)
 end
 
 function tank:update(dt)
-    -- Limit rotation
-    if self:getRelativeBarrelAngle() <= 0 then
-        self.barrelAngle = 0 + self.angleOffset
-    elseif self:getRelativeBarrelAngle() >= 90 then
-        self.barrelAngle = (90 * -self.direction) + self.angleOffset
-    end
-
-    if love.keyboard.isDown(self.btnRotateCW) then
-        self.barrelAngle = self.barrelAngle + self.barrelSpeed * dt
-    end
-
-    if love.keyboard.isDown(self.btnRotateCCW) then
-        self.barrelAngle = self.barrelAngle - self.barrelSpeed * dt
-    end
-
     if self.hp <= 0 then
         EntityManager.destroy(self.id)
     end
 end
 
 function tank:draw()
-    local bx, by = self:getBarrelPos()
-
     love.graphics.setColor(255, 255, 255, 255)
-    love.graphics.draw(self.barrelImage,
-        bx,
-        by,
-        math.rad(self.barrelAngle),
-        self.scale,
-        self.scale,
-        0,
-        self.barrelImage:getHeight() / 2)
 
+    if self.barrelOnTop then
+        self:drawBody()
+        self:drawBarrel()
+    else
+        self:drawBarrel()
+        self:drawBody()
+    end
+end
+
+function tank:drawBody()
     love.graphics.draw(self.image,
         self.x,
         self.y,
@@ -105,8 +93,33 @@ function tank:draw()
         self.scale,
         self.image:getWidth() / 2,
         self.image:getHeight() / 2)
+end
 
-    love.graphics.print("Player " .. self.player, self.x, self.y - 50)
+function tank:drawBarrel()
+    local bx, by = self:getBarrelPos()
+
+    love.graphics.draw(self.barrelImage,
+        bx,
+        by,
+        math.rad(self.barrelAngle),
+        self.scale,
+        self.scale,
+        self.barrelPivotOffset,
+        self.barrelImage:getHeight() / 2)
+end
+
+function tank:rotateBarrel(dir, dt)
+    if dir == "CW" then
+        self.barrelAngle = self.barrelAngle + self.barrelSpeed * dt
+    elseif dir == "CCW" then
+        self.barrelAngle = self.barrelAngle - self.barrelSpeed * dt
+    end
+
+    if self:getRelativeBarrelAngle() <= 0 then
+        self.barrelAngle = 0 + self.angleOffset
+    elseif self:getRelativeBarrelAngle() >= 90 then
+        self.barrelAngle = (90 * -self.direction) + self.angleOffset
+    end
 end
 
 function tank:getScaledSize()
@@ -160,8 +173,10 @@ function tank:getBarrelPos()
 end
 
 function tank:getProjectileStartPos()
-    return self.x + math.cos(math.rad(self.barrelAngle)) * (self.barrelImage:getWidth() + 0 * self.scale) * self.scale,
-        self.y + math.sin(math.rad(self.barrelAngle)) * (self.barrelImage:getWidth() + 0 * self.scale) * self.scale
+    local x, y = self:getBarrelPos()
+
+    return x + math.cos(math.rad(self.barrelAngle)) * (self.barrelImage:getWidth() - self.barrelPivotOffset * self.scale) * self.scale,
+        y + math.sin(math.rad(self.barrelAngle)) * (self.barrelImage:getWidth() - self.barrelPivotOffset * self.scale) * self.scale
 end
 
 function tank:getHp()
@@ -175,17 +190,7 @@ end
 function tank:shoot()
     if self:isAlive() then
         local px, py = self:getProjectileStartPos()
-
-        EntityManager.create("projectile", false,
-        {
-            image = "projectile",
-            x = px,
-            y = py,
-            power = self.power,
-            angle = self:getBarrelDeg(),
-            scale = self.scale,
-            damage = 10
-        })
+        ProjectileManager.create("black", px, py, self:getBarrelDeg(), self.power)
     end
 end
 

@@ -23,7 +23,7 @@ function projectile:load(data)
     -- Init data if not passed so we don't have errors
     if not data then data = {} end
 
-    self.image = TextureManager.getImage(data.image or "projectile")
+    self.image = TextureManager.getImage(data.image or "projectile_grey")
     self.scale = data.scale or 1
     self.speedScale = data.speedScale or 1.2
     self.vx = (data.power or 1) * math.cos(math.rad(data.angle or 0)) * METER_SIZE
@@ -46,7 +46,7 @@ function projectile:update(dt)
         EntityManager.destroy(self.id)
     end
 
-    if tankCollide(self.x, self.y, self.damage) then
+    if TankManager.getCount() > 0 and tankCollide(self.x, self.y, self.damage) then
         EntityManager.destroy(self.id)
     end
 

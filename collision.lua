@@ -42,9 +42,7 @@ function tankCollide(x, y, power)
         local sx, sy = tank:getPos()
         local sw, sh = tank:getScaledSize()
 
-        if insideBox(x, y, sx - sw / 2, sy + 10 - sh / 2, sw, sh) then
-            -- Collision with tank
-            print("collision with tank")
+        if insideBox(x, y, sx - sw / 2, sy - sh / 2, sw, sh) then
             tank:damage(power)
 
             return true

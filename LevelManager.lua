@@ -14,28 +14,60 @@ LevelManager = {}
 local levels = {
     ["peaceful"] =
     {
-        terrainTexture = "dirt",
+        terrainTexture = "terrain_dirt",
         skyTexture = nil,
         skyColor = { 0, 245, 255 },
         skyEntities = { ["cloud"] = 2 },
-        wind = 0,--math.random(-3, 3),
+        wind = 0,
         gravity = 9.8
     },
 
     ["ahhh"] =
     {
-        terrainTexture = "dirt",
+        terrainTexture = "terrain_dirt",
         skyTexture = nil,
         skyColor = { 255, 0, 0 },
-        skyEntities = { },--["cloud"] = 2 },
+        skyEntities = { },
         wind = math.random(-10, 10),
         gravity = 4
     }
 }
 
-function LevelManager.getLevelData(lvl)
+function LevelManager.get(lvl)
     if levels[lvl] then
-        return levels[lvl]
+        return deepCopy(levels[lvl])
+    else
+        print("No level \'" .. lvl .. "\'")
+        return nil
+    end
+end
+
+function LevelManager.load(lvl)
+    if levels[lvl] then
+        if levels[lvl].skyColor then
+            love.graphics.setBackgroundColor(unpack(levels[lvl].skyColor))
+        elseif level.skyTexture then
+            -- Ian's tile texturizing algorithm
+        end
+
+        EntityManager.create("terrain", true,
+        {
+            texture = levels[lvl].terrainTexture
+        })
+
+        for ent,num in pairs(levels[lvl].skyEntities) do
+            for i = 1, num do
+                EntityManager.create(ent, true)
+            end
+        end
+
+        if levels[lvl].wind then
+            WIND = levels[lvl].wind * METER_SIZE
+        end
+
+        if levels[lvl].gravity then
+            GRAVITY = levels[lvl].gravity * METER_SIZE
+        end
     else
         print("No level \'" .. lvl .. "\'")
         return nil

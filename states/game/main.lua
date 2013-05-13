@@ -1,71 +1,25 @@
 -- Main game state
 -- args - level name
-local level
-
 function load(args)
-    level = LevelManager.getLevelData(args)
-
-    if level.skyColor then
-        love.graphics.setBackgroundColor(unpack(level.skyColor))
-    elseif level.skyTexture then
-        -- Ian's tile texturizing algorithm
-    end
-
-    -- Draw the terrain
-    EntityManager.create("terrain", true,
-        {
-            texture = level.terrainTexture
-        })
-
-    for ent,num in pairs(level.skyEntities) do
-        for i = 1, num do
-            EntityManager.create(ent, true)
-        end
-    end
-
-    if level.wind then
-        WIND = level.wind * METER_SIZE
-    end
-
-    if level.gravity then
-        GRAVITY = level.gravity * METER_SIZE
-    end
-
-    EntityManager.create("tank",
-        false,
-        {
-            image = "tank2",
-            x = 100,
-            y = 350,
-            barrelImage = "barrel2",
-        })
-
-    EntityManager.create("tank",
-        false,
-        {
-            image = "tank2",
-            x = 500,
-            y = 350,
-            barrelImage = "barrel2",
-            direction = "left",
-            btnShoot = ".",
-            btnRotateCW = "p",
-            btnRotateCCW = "i",
-            btnAdjustPowerDown = "m",
-            btnAdjustPowerUp = "j"
-
-        })
+    LevelManager.load(args.lvl)
+    TankManager.create("grey", 150, 400, "right")
+    TankManager.create("grey", 400, 400, "left")
 end
 
 function love.update(dt)
+    if love.keyboard.isDown("q") then
+        EntityManager.getAll("tank")[1]:rotateBarrel("CCW", dt)
+    elseif love.keyboard.isDown("e") then
+        EntityManager.getAll("tank")[1]:rotateBarrel("CW", dt)
+    end
+
     EntityManager.update(dt)
 end
 
 function love.draw()
     EntityManager.draw()
 
-    love.graphics.setColor(0, 0, 0, 255)
-    love.graphics.print(WIND / METER_SIZE, 10, 10)
+    love.graphics.print(tostring(love.timer.getFPS()), 10, 10)
 end
 
 function love.keypressed(k)
