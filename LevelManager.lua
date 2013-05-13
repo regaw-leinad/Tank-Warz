@@ -10,7 +10,9 @@ LevelManager = {}
       gravity - The y gravity in m/s^2
 --]]
 
--- Define levels HERE
+LevelManager.PEACEFUL = 1
+LevelManager.AHHH = 2
+
 local levels = {
     ["peaceful"] =
     {

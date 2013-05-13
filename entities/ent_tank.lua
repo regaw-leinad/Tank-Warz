@@ -17,17 +17,13 @@ local tank = EntityManager.derive("base")
       barrelOffsetX - The X offset of the barrel from tank's x
       barrelOffsetY - The Y offset of the barrel from tank's y
       barrelPivotOffset - The X offset for the pivot (Y is always center)
+      barrelOnTop - If the barrel should be drawn on top of the tank
       scale - The image scale
       power - The initial tank power
       barrelAngle - The initial angle of the barrel
       barrelSpeed - The speed of barrel's movement
       maxHp - The max health of the tank
       hp - The initial health of the tank
-      btnShoot - KeyConstant for shooting a projectile
-      btnRotateCW - KeyConstant for rotating barrel CW
-      btnRotateCCW - KeyConstant for rotating barrel CCW
-      btnAdjustPowerUp - KeyConstant for adjusting power up
-      btnAdjustPowerDown - KeyConstant for adjusting power up
       direction - The direction the tank faces ("left" or "right")
 --]]
 function tank:load(data)
@@ -36,22 +32,17 @@ function tank:load(data)
 
     -- Set properties
     self.image = TextureManager.getImage(data.image or "tank_red")
+    self:setPos(data.x or 0, data.y or 0)
     self.barrelImage = TextureManager.getImage(data.barrelImage or "tank_red_barrel")
     self.barrelOffsetX = data.barrelOffsetX or 0
     self.barrelOffsetY = data.barrelOffsetY or 0
     self.barrelPivotOffset = data.barrelPivotOffset or 0
     self.barrelOnTop = data.barrelOnTop or false
-    self:setPos(data.x or 0, data.y or 0)
     self.scale = data.scale or 1
     self.power = data.power or 10
     self.barrelSpeed = data.barrelSpeed or 50
     self.maxHp = data.maxHp or 100
     self.hp = data.hp or 100
-    self.btnShoot = data.btnShoot or " "
-    self.btnAdjustPowerUp = data.btnAdjustPowerUp or "a"
-    self.btnAdjustPowerDown = data.btnAdjustPowerDown or "z"
-    self.btnRotateCW = data.btnRotateCW or "e"
-    self.btnRotateCCW = data.btnRotateCCW or "q"
     self.player = EntityManager.getCount("tank") + 1
 
     local dir = data.direction or "right"
@@ -190,7 +181,7 @@ end
 function tank:shoot()
     if self:isAlive() then
         local px, py = self:getProjectileStartPos()
-        ProjectileManager.create("black", px, py, self:getBarrelDeg(), self.power)
+        ProjectileManager.create(ProjectileManager.BLACK, px, py, self:getBarrelDeg(), self.power)
     end
 end
 

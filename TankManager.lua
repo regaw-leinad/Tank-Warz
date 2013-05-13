@@ -1,11 +1,16 @@
 TankManager = {}
 
+TankManager.RED = 1
+TankManager.GREY = 2
+
 local tanks =
 {
-    ["red"] =
+    [TankManager.RED] =
     {
         image = "tank_red",
+        imageW, imageH = TextureManager.getImageDimensions("tank_red"),
         barrelImage = "tank_red_barrel",
+        barrelImageW, barrelImageH = TextureManager.getImageDimensions("tank_red_barrel"),
         barrelOffsetX = 0,
         barrelOffsetY = -16,
         scale = .125,
@@ -16,10 +21,12 @@ local tanks =
         hp = 100
     },
 
-    ["grey"] =
+    [TankManager.GREY] =
     {
         image = "tank_grey",
+        imageW, imageH = TextureManager.getImageDimensions("tank_grey"),
         barrelImage = "tank_grey_barrel",
+        barrelImageW, barrelImageH = TextureManager.getImageDimensions("tank_grey"),
         barrelOffsetX = 0,
         barrelOffsetY = 0,
         barrelPivotOffset = 9,
@@ -60,4 +67,15 @@ end
 
 function TankManager.getCount()
     return EntityManager.getCount("tank")
+end
+
+function TankManager.getPlayerTank(player)
+    for _,tank in ipairs(EntityManager.getAll("tank")) do
+        if tank.player == player then
+            return tank
+        end
+    end
+
+    print("No tank with player " .. player)
+    return nil
 end

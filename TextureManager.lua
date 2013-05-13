@@ -36,7 +36,7 @@ local function loadAll()
 
         print("Loading textures...")
 
-        for _,file in pairs(files) do
+        for _,file in ipairs(files) do
 
             if string.starts(file, prefix) then
                 local name = file:gsub(prefix, ""):gsub(".png", "")
@@ -81,6 +81,15 @@ function TextureManager.getImageData(name)
     end
 end
 
+function TextureManager.getImageDimensions(name)
+    if textures[name] then
+        return textures[name].imageData:getWidth(), textures[name].imageData:getHeight()
+    else
+        print("\'" .. name .. "\' is not a valid texture")
+        return false
+    end
+end
+
 -- Creates a textured image from a polygon and texture
 function TextureManager.makeTexturedPoly(poly, cutPoly, texture)
     local minX, maxX, minY, maxY
@@ -114,7 +123,7 @@ function TextureManager.makeTexturedPoly(poly, cutPoly, texture)
     love.graphics.translate(-minX, -minY)
 
     -- Draw the polygon (white)
-    for _,triangle in pairs(cutPoly) do
+    for _,triangle in ipairs(cutPoly) do
         love.graphics.polygon('fill', triangle)
     end
 

@@ -1,8 +1,11 @@
 ProjectileManager = {}
 
+ProjectileManager.PINK = 1
+ProjectileManager.BLACK = 2
+
 local projectiles =
 {
-    ["pink"] =
+    [ProjectileManager.PINK] =
     {
         image = "projectile_pink",
         scale = 1,
@@ -10,7 +13,7 @@ local projectiles =
         damage = 10
     },
 
-    ["black"] =
+    [ProjectileManager.BLACK] =
     {
         image = "projectile_black",
         scale = 1,
