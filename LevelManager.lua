@@ -14,7 +14,7 @@ LevelManager.PEACEFUL = 1
 LevelManager.AHHH = 2
 
 local levels = {
-    ["peaceful"] =
+    [LevelManager.PEACEFUL] =
     {
         terrainTexture = "terrain_dirt",
         skyTexture = nil,
@@ -24,7 +24,7 @@ local levels = {
         gravity = 9.8
     },
 
-    ["ahhh"] =
+    [LevelManager.AHHH] =
     {
         terrainTexture = "terrain_dirt",
         skyTexture = nil,
