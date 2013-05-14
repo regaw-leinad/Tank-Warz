@@ -20,5 +20,5 @@ function love.load()
     require("TankManager")
     require("ProjectileManager")
 
-    StateManager.load("game", { lvl = "peaceful"})
+    StateManager.load("game", { lvl = LevelManager.PEACEFUL })
 end
