@@ -1,3 +1,11 @@
+--[[
+    conf.lua
+    The config file for LOVE
+
+    Authors:
+        Dan Wager
+--]]
+
 require("global")
 
 function love.conf(t)

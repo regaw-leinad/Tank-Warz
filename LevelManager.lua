@@ -1,19 +1,21 @@
-LevelManager = {}
-
 --[[
-    level params:
-      terrainTexture - The terrain's texture
-      skyTexture - The sky's texture
-      skyColor - The sky's color
-      skyEntities - Table with entity types and number of each
-      wind - The amount of initial wind in m/s
-      gravity - The y gravity in m/s^2
+    LevelManager.lua
+    Manages the different levels in the application
+
+    Authors:
+        Dan Wager
 --]]
 
+LevelManager = {}
+
+-- The peaceful level
 LevelManager.PEACEFUL = 1
+-- The hell-ish level
 LevelManager.AHHH = 2
 
-local levels = {
+-- Table of levels with values
+local levels =
+{
     [LevelManager.PEACEFUL] =
     {
         terrainTexture = "terrain_dirt",
@@ -35,7 +37,10 @@ local levels = {
     }
 }
 
-function LevelManager.get(lvl)
+-- Gets a copy of the level's value table
+-- @param lvl The level
+-- @return The table of values for the specified level (table)
+local function get(lvl)
     if levels[lvl] then
         return deepCopy(levels[lvl])
     else
@@ -44,6 +49,15 @@ function LevelManager.get(lvl)
     end
 end
 
+-- Gets a table containing the initialization data for the specified level
+-- @param lvl The level
+-- @return The table of init data for the specified level (table)
+function LevelManager.getData(lvl)
+    return get(lvl)
+end
+
+-- Loads a level for playing
+-- @param lvl The level
 function LevelManager.load(lvl)
     if levels[lvl] then
         if levels[lvl].skyColor then
@@ -72,6 +86,5 @@ function LevelManager.load(lvl)
         end
     else
         print("No level \'" .. lvl .. "\'")
-        return nil
     end
 end

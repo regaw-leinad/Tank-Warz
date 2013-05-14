@@ -10,6 +10,12 @@
 local terrain = EntityManager.derive("base")
 
 -- Daniel Rolandi's random terrain generation
+-- @param xStart The starting X value
+-- @param yStart The starting Y value
+-- @param wMin The minimum width between vertices
+-- @param wBuff The maximum width between vertices
+-- @param hBuff The maximum height change between vertices
+-- @return The table of verticies in the polygon
 local function generateTerrain(xStart, yStart, wMin, wBuff, hBuff)
     math.randomseed(os.time())
 
@@ -59,6 +65,8 @@ local function generateTerrain(xStart, yStart, wMin, wBuff, hBuff)
     return v
 end
 
+-- Initial set up of the entity
+-- @param data Table of arguments
 function terrain:load(data)
     -- Init data if not passed so we don't have errors
     if not data then data = {} end
@@ -74,6 +82,7 @@ function terrain:load(data)
     self.terrain = TextureManager.makeTexturedPoly(self.coords, self.cutPoly, TextureManager.getImageData(data.texture))
 end
 
+-- Draws the entity on screen
 function terrain:draw()
     love.graphics.setColor(255, 255, 255, 255)
     love.graphics.draw(self.terrain, 0, SCREEN_HEIGHT - self.terrain:getHeight() + 1)
@@ -85,10 +94,14 @@ function terrain:draw()
 
 end
 
+-- Gets the table of coordinates that make up the terrain
+-- @return The coordinates of the terrain's polygon (table)
 function terrain:getCoords()
     return self.coords
 end
 
+-- Gets a value indicating how many values are in the coordinate table not including the last 2 points
+-- @return Number of values in the coordinates table not including the last 2 points (int)
 function terrain:getPointCount()
     return #self.coords - 4
 end

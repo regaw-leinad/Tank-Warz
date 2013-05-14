@@ -54,7 +54,7 @@ function tank:load(data)
         self.angleOffset = 0
     end
 
-    self.barrelAngle = self:setRelativeBarrelAngle(data.barrelAngle or 0)
+    self:setRelativeBarrelAngle(data.barrelAngle or 0)
 end
 
 function tank:update(dt)
@@ -99,6 +99,9 @@ function tank:drawBarrel()
         self.barrelImage:getHeight() / 2)
 end
 
+-- Rotates the barrel
+-- @param dir The direction of rotation
+-- @param dt Delta time
 function tank:rotateBarrel(dir, dt)
     if dir == "CW" then
         self.barrelAngle = self.barrelAngle + self.barrelSpeed * dt
@@ -115,16 +118,22 @@ function tank:rotateBarrel(dir, dt)
     end
 end
 
+-- Gets a value indicating the size of the scaled tank image
+-- @return The scaled dimensions of the tank (int, int)
 function tank:getScaledSize()
     return self.image:getWidth() * self.scale, self.image:getHeight() * self.scale
 end
 
+-- Applies damage to the tank's hp
+-- @param n The amount of damage
 function tank:damage(n)
     if self:isAlive() then
         self.hp = self.hp - n
     end
 end
 
+-- Heals the tank
+-- @param n The amount of healing
 function tank:heal(n)
     self.hp = self.hp + n
 
@@ -133,22 +142,32 @@ function tank:heal(n)
     end
 end
 
+-- Gets a value indicating the angle of the barrel in relation to the tank's angle
+-- @return The angle of the barrel (int, int)
 function tank:getRelativeBarrelAngle()
     return (self.barrelAngle - self.angleOffset) * (-self.direction)
 end
 
+-- Sets the angle of the barrel in relation to the tank's angle
+-- @param a The angle
 function tank:setRelativeBarrelAngle(a)
-    return a * (-self.direction) + self.angleOffset
+    self.barrelAngle = a * (-self.direction) + self.angleOffset
 end
 
+-- Gets a value indicating the power of the tank
+-- @return The power of the tank (int)
 function tank:getPower()
     return self.power
 end
 
+-- Gets a value indicating if the tank is alive
+-- @return If the tank is alive (boolean)
 function tank:isAlive()
     return self.hp > 0
 end
 
+-- Adjusts the power of the tank
+-- @param n The change in power
 function tank:adjustPower(n)
     self.power = self.power + n
 
@@ -157,10 +176,14 @@ function tank:adjustPower(n)
     end
 end
 
+-- Gets the X and Y coordinates of the beginning of the barrel
+-- @return The barrel's position (int, int)
 function tank:getBarrelPos()
     return self.x + self.barrelOffsetX * self.scale, self.y + self.barrelOffsetY * self.scale
 end
 
+-- Gets the X and Y coordinate of where the projectile will start from
+-- @return The projectile's initial coordinates (int, int)
 function tank:getProjectileStartPos()
     local x, y = self:getBarrelPos()
 
@@ -168,14 +191,20 @@ function tank:getProjectileStartPos()
         y + math.sin(math.rad(self.barrelAngle)) * (self.barrelImage:getWidth() - self.barrelPivotOffset * self.scale) * self.scale
 end
 
+-- Gets the tank's current HP
+-- @return The tank's current HP (int)
 function tank:getHp()
     return self.hp
 end
 
+-- Gets the tank's max HP
+-- @return The tank's max HP (int)
 function tank:getMaxHp()
     return self.maxHp
 end
 
+-- Shoots a projectile from the tank
+-- @param projectile The projectile
 function tank:shoot(projectile)
     if self:isAlive() then
         local px, py = self:getProjectileStartPos()

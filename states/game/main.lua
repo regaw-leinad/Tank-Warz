@@ -20,8 +20,8 @@ function load(args)
 
     -- Here is where we do the placing algorithm for the tanks
 
-    TankManager.create(TankManager.GREY, 150, 400, "right", 45)
-    TankManager.create(TankManager.GREY, 600, 400, "left", 45)
+    TankManager.create(TankManager.GREY, 150, 400, "right", 0)
+    TankManager.create(TankManager.GREY, 600, 400, "left", 0)
 end
 
 function love.update(dt)

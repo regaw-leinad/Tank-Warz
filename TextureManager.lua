@@ -1,10 +1,24 @@
+--[[
+    TextureManager.lua
+    Manages textures used by the application
+
+    Authors:
+        Dan Wager
+--]]
+
 TextureManager = {}
 
+-- The table of textures that are loaded
 local textures = {}
+-- The path to the textures directory
 local path
+-- The filename prefix all textures need to have to be registered
 local prefix = "tex_"
 
 -- Applies texture to a canvas' image data
+-- @param target The canvas to texturize
+-- @param texture The texture to apply to the canvas
+-- @return A new Image from the texturized canvas (Image)
 local function texturize(target, texture)
 
     -- This defines how all the pixels are transformed
@@ -30,6 +44,7 @@ local function texturize(target, texture)
     return love.graphics.newImage(id)
 end
 
+-- Loads and registers all valid textures from the texture directory
 local function loadAll()
     if love.filesystem.exists(path) then
         local files = love.filesystem.enumerate(path)
@@ -49,20 +64,16 @@ local function loadAll()
     end
 end
 
+-- Starts up the TextureManager
+-- @param texPath The texture directory (relative)
 function TextureManager.startup(texPath)
     path = texPath or "textures/"
     loadAll()
 end
 
-function TextureManager.getPath(name)
-    if textures[name] then
-        return textures[name].path
-    else
-        print("\'" .. name .. "\' is not a valid texture")
-        return false
-    end
-end
-
+-- Gets the Image from the specified texture
+-- @param name The texture name
+-- @return The Image of the specified texture (Image)
 function TextureManager.getImage(name)
     if textures[name] then
         return love.graphics.newImage(textures[name].imageData)
@@ -72,6 +83,9 @@ function TextureManager.getImage(name)
     end
 end
 
+-- Gets the ImageData from the specified texture
+-- @param name The texture name
+-- @return The ImageData of the specifed texture (ImageData)
 function TextureManager.getImageData(name)
     if textures[name] then
         return textures[name].imageData
@@ -81,6 +95,9 @@ function TextureManager.getImageData(name)
     end
 end
 
+-- Gets the Image width and height of the specifed texture
+-- @param name The texture name
+-- @return The width and height of the specified texture (int, int)
 function TextureManager.getImageDimensions(name)
     if textures[name] then
         return textures[name].imageData:getWidth(), textures[name].imageData:getHeight()
@@ -91,6 +108,10 @@ function TextureManager.getImageDimensions(name)
 end
 
 -- Creates a textured image from a polygon and texture
+-- @param poly The polygon coordinates
+-- @param cutPoly The split polygon (for concave poly support)
+-- @param texture The ImageData of the texture
+-- @return The texturized polygon (Image)
 function TextureManager.makeTexturedPoly(poly, cutPoly, texture)
     local minX, maxX, minY, maxY
 

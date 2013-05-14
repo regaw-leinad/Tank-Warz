@@ -1,12 +1,26 @@
+--[[
+    EntityManager.lua
+    Manages the different entities in the application
+
+    Authors:
+        Dan Wager
+--]]
+
 EntityManager = {}
 
+-- Holds the actual entites currently in each state
 local objects = {}
+-- A table of all the valid entities
 local register = {}
+-- the path to the entities' directory
 local path
+-- The filename prefix all entities need to have to be registered
 local prefix = "ent_"
+-- The index ID for the entities
 local id = 0
 
--- Loads the entities from all the states' entities folder
+-- Starts up the EntityManager
+-- @param entPath The entities directory (relative)
 function EntityManager.startup(entPath)
     path = entPath or "entities/"
 
@@ -20,15 +34,23 @@ function EntityManager.startup(entPath)
     end
 end
 
+-- Allows other entities to derive from the specified entitiy
+-- @param name The entity to derive from
+-- @return The entity to derive from (entity/table)
 function EntityManager.derive(name)
     if register[name] then
         return register[name]()
     else
         print("Entitiy \'" .. name .. "\' not registered")
-        return false
+        return nil
     end
 end
 
+-- Creates a new entity
+-- @param name The entity
+-- @param background If the entity should be drawn in the background (first)
+-- @param data A table of init data for the entity
+-- @return The new entity (entity/table)
 function EntityManager.create(name, background, data)
     local state = StateManager.getCurrentState()
 
@@ -45,21 +67,13 @@ function EntityManager.create(name, background, data)
         return objects[state][id]
     else
         print("Entitiy \'" .. name .. "\' not registered")
-        return false
+        return nil
     end
 end
 
-function EntityManager.get(id)
-    local state = StateManager.getCurrentState()
-
-    if objects[state][id] then
-        return objects[state][id]
-    else
-        print("No entity with id " .. id)
-        return false
-    end
-end
-
+-- Gets all of the specified entity in the current state
+-- @param enyType The entity type to get
+-- @return A table of entities (table)
 function EntityManager.getAll(entType)
     local state = StateManager.getCurrentState()
     local t = {}
@@ -83,6 +97,9 @@ function EntityManager.getAll(entType)
     end
 end
 
+-- Gets the count of the specified entity in the current state
+-- @param entType The entity type
+-- @return The count of entities (int)
 function EntityManager.getCount(entType)
     local state = StateManager.getCurrentState()
     local count = 0
@@ -98,6 +115,8 @@ function EntityManager.getCount(entType)
     return count
 end
 
+-- Updates all entities in the current state
+-- @param dt Delta time
 function EntityManager.update(dt)
     local state = StateManager.getCurrentState()
 
@@ -108,6 +127,8 @@ function EntityManager.update(dt)
     end
 end
 
+-- Draws all entities in the current state to the screen
+-- Draws background entities first
 function EntityManager.draw()
     local state = StateManager.getCurrentState()
 
@@ -124,6 +145,8 @@ function EntityManager.draw()
     end
 end
 
+-- Removes an entity from the current state and memory
+-- @param id the entity's id
 function EntityManager.destroy(id)
     local state = StateManager.getCurrentState()
 
@@ -136,6 +159,8 @@ function EntityManager.destroy(id)
     end
 end
 
+-- Removes all entities from the current state and memory
+-- @param state The state to remove all entities from
 function EntityManager.destroyStateEntities(state)
     if not state then state = StateManager.getCurrentState() end
 

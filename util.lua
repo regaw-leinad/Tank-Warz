@@ -1,11 +1,31 @@
+--[[
+    util.lua
+    Utility functions
+
+    Authors:
+        Dan Wager
+--]]
+
+-- Checks if a string starts with a specified string
+-- @param String The string to check
+-- @param Start The string to check for
+-- @return If the string starts with the specified string (boolean)
 function string.starts(String, Start)
    return string.sub(String, 1, string.len(Start)) == Start
 end
 
+-- Checks if a string ends with a specified string
+-- @param String The string to check
+-- @param Start The string to check for
+-- @return If the string ends with the specified string (boolean)
 function string.ends(String, End)
    return End == '' or string.sub(String, -string.len(End)) == End
 end
 
+-- Rounds a value to a certain number of decimal places
+-- @param val The value
+-- @param decimal The number of places to round to
+-- @return The rounded number (decimal)
 function round(val, decimal)
     if (decimal) then
         return math.floor((val * 10 ^ decimal) + 0.5) / (10 ^ decimal)
@@ -14,6 +34,11 @@ function round(val, decimal)
     return math.floor(val + 0.5)
 end
 
+-- Cuts a polygon into multiple triangular polygons
+-- @param midX The mid X coordinate
+-- @param midY The mid Y coordinate
+-- @param poly The polygon to cut
+-- @return A table containing a cut up polygon (table)
 function polygonCut(midX, midY, poly)
     local t = {}
 
@@ -34,6 +59,9 @@ function polygonCut(midX, midY, poly)
     return t
 end
 
+-- Copies a table on one level only
+-- @param orig The table
+-- @return The copy of the table (table)
 function shallowCopy(orig)
     local orig_type = type(orig)
     local copy
@@ -51,6 +79,9 @@ function shallowCopy(orig)
     return copy
 end
 
+-- Copies a table recursively
+-- @param orig The table
+-- @return The copy of the table (table)
 function deepCopy(orig)
     local orig_type = type(orig)
     local copy

@@ -1,7 +1,18 @@
+--[[
+    StateManager.lua
+    Manages the different states in the application
+
+    Authors:
+        Dan Wager
+--]]
+
 StateManager = {}
 
+-- The table of states that are registered
 local states = {}
+-- The path to the states directory
 local path
+-- The current state of the application
 local currentState = nil
 
 -- Sets all love callbacks to nil
@@ -22,6 +33,7 @@ local function clearLove()
 end
 
 -- Loads the states from the file system
+-- @param statePath The states directory (relative)
 function StateManager.startup(statePath)
     path = statePath or "states/"
     local folders = love.filesystem.enumerate(path)
@@ -39,7 +51,8 @@ function StateManager.startup(statePath)
 end
 
 -- Loads a state from the file system
--- Possibly destroy state before? Or let client do this first?
+-- @param state The state name
+-- @param args A table of arguments to pass to the state
 function StateManager.load(state, args)
     if states[state] then
         clearLove()
@@ -52,7 +65,8 @@ function StateManager.load(state, args)
     end
 end
 
--- Loads a state from the file system
+-- Resumes a previously running state
+-- @param The state name
 function StateManager.resume(state)
     if states[state] then
         clearLove()
@@ -60,10 +74,11 @@ function StateManager.resume(state)
         states[state].data()
     else
         print("Error loading state \'".. state .. "\'")
-        return false
     end
 end
 
+-- Destroys (resets) a state
+-- @param state The state name
 function StateManager.destroy(state)
     if states[state] and states[state].loaded then
         if state == currentState then
@@ -76,10 +91,12 @@ function StateManager.destroy(state)
         EntityManager.destroyStateEntities(state)
     else
         print("Error destroying state \'".. state .. "\'")
-        return false
     end
 end
 
+-- Gets a value indicating if the specified state has been loaded, and not yet destroyed
+-- @param state The state name
+-- @return If the specified state is loaded (boolean)
 function StateManager.isLoaded(state)
     if states[state] then
         return states[state].loaded
@@ -89,10 +106,14 @@ function StateManager.isLoaded(state)
     end
 end
 
+-- Gets a table of the registered states
+-- @return The registered states (table)
 function StateManager.getStates()
     return states
 end
 
+-- Gets a value indicating the current state
+-- @return The current state (string)
 function StateManager.getCurrentState()
     return currentState
 end
