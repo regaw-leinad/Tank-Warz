@@ -54,7 +54,7 @@ function tank:load(data)
         self.angleOffset = 0
     end
 
-    self.barrelAngle = (data.barrelAngle or 0) + self.angleOffset
+    self.barrelAngle = self:setRelativeBarrelAngle(data.barrelAngle or 0)
 end
 
 function tank:update(dt)
@@ -131,16 +131,12 @@ function tank:heal(n)
     end
 end
 
-function tank:getBarrelRads()
-    return math.rad(self.barrelAngle)
-end
-
-function tank:getBarrelDeg()
-    return self.barrelAngle
-end
-
 function tank:getRelativeBarrelAngle()
     return (self.barrelAngle - self.angleOffset) * (-self.direction)
+end
+
+function tank:setRelativeBarrelAngle(a)
+    return a * (-self.direction) + self.angleOffset
 end
 
 function tank:getPower()
@@ -178,10 +174,10 @@ function tank:getMaxHp()
     return self.maxHp
 end
 
-function tank:shoot()
+function tank:shoot(projectile)
     if self:isAlive() then
         local px, py = self:getProjectileStartPos()
-        ProjectileManager.create(ProjectileManager.BLACK, px, py, self:getBarrelDeg(), self.power)
+        ProjectileManager.create(projectile, px, py, self.barrelAngle, self.power)
     end
 end
 

@@ -15,7 +15,6 @@ local tanks =
         barrelOffsetY = -16,
         scale = .125,
         power = 10,
-        barrelAngle = 0,
         barrelSpeed = 30,
         maxHp = 100,
         hp = 100
@@ -33,7 +32,6 @@ local tanks =
         barrelOnTop = true,
         scale = 1,
         power = 20,
-        barrelAngle = 0,
         barrelSpeed = 50,
         maxHp = 200,
         hp = 200
@@ -53,12 +51,13 @@ function TankManager.getData(tank)
     return get(tank)
 end
 
-function TankManager.create(tank, x, y, direction)
+function TankManager.create(tank, x, y, direction, barrelAngle)
     local tankData = get(tank)
 
     tankData["x"] = x
     tankData["y"] = y
     tankData["direction"] = direction
+    tankData["barrelAngle"] = barrelAngle or 0
 
     if tankData then
         EntityManager.create("tank", false, tankData)

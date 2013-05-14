@@ -1,14 +1,27 @@
 -- Main game state
 -- args - level name
+local players = {}
+
 function load(args)
     LevelManager.load(args.lvl)
 
+    players[PLAYER1] =
+    {
+        projectile = ProjectileManager.BLACK
+    }
+
+    players[PLAYER2] =
+    {
+        projectile = ProjectileManager.PINK
+    }
+
     CURRENT_PLAYER = PLAYER1
+
 
     -- Here is where we do the placing algorithm for the tanks
 
-    TankManager.create(TankManager.GREY, 150, 400, "right")
-    TankManager.create(TankManager.GREY, 600, 400, "left")
+    TankManager.create(TankManager.GREY, 150, 400, "right", 45)
+    TankManager.create(TankManager.GREY, 600, 400, "left", 45)
 end
 
 function love.update(dt)
@@ -28,9 +41,8 @@ function love.draw()
 end
 
 function love.keypressed(k)
-
     if k == " " then
-        TankManager.getPlayerTank(CURRENT_PLAYER):shoot()
+        TankManager.getPlayerTank(CURRENT_PLAYER):shoot(players[CURRENT_PLAYER].projectile)
         switchPlayer()
     elseif k == "a" then
         TankManager.getPlayerTank(CURRENT_PLAYER):adjustPower(1)
