@@ -106,10 +106,12 @@ function tank:rotateBarrel(dir, dt)
         self.barrelAngle = self.barrelAngle - self.barrelSpeed * dt
     end
 
-    if self:getRelativeBarrelAngle() <= 0 then
-        self.barrelAngle = 0 + self.angleOffset
-    elseif self:getRelativeBarrelAngle() >= 90 then
-        self.barrelAngle = (90 * -self.direction) + self.angleOffset
+    local angle = self:getRelativeBarrelAngle()
+
+    if angle <= 0 then
+        self.barrelAngle = self:setRelativeBarrelAngle(0)
+    elseif angle >= 90 then
+        self.barrelAngle = self:setRelativeBarrelAngle(90)
     end
 end
 
