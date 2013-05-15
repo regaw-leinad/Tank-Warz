@@ -17,11 +17,11 @@ function load(args)
 
     CURRENT_PLAYER = PLAYER1
 
+    local y1, a1 = getTankDrop(150)
+    local y2, a2 = getTankDrop(600)
 
-    -- Here is where we do the placing algorithm for the tanks and angle
-
-    TankManager.create(TankManager.GREY, 150, 400, "right", 0, 0)
-    TankManager.create(TankManager.GREY, 600, 400, "left", 0, 0)
+    TankManager.create(TankManager.GREY, 150, y1, "right", a1, 0)
+    TankManager.create(TankManager.GREY, 600, y2, "left", a2, 0)
 end
 
 function love.update(dt)

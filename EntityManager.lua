@@ -120,9 +120,11 @@ end
 function EntityManager.update(dt)
     local state = StateManager.getCurrentState()
 
-    for _,ent in pairs(objects[state]) do
-        if ent.update then
-            ent:update(dt)
+    if objects[state] then
+        for _,ent in pairs(objects[state]) do
+            if ent.update then
+                ent:update(dt)
+            end
         end
     end
 end
@@ -132,15 +134,17 @@ end
 function EntityManager.draw()
     local state = StateManager.getCurrentState()
 
-    for _,ent in pairs(objects[state]) do
-        if ent.background and ent.draw then
-            ent:draw()
+    if objects[state] then
+        for _,ent in pairs(objects[state]) do
+            if ent.background and ent.draw then
+                ent:draw()
+            end
         end
-    end
 
-    for _,ent in pairs(objects[state]) do
-        if not ent.background and ent.draw then
-            ent:draw()
+        for _,ent in pairs(objects[state]) do
+            if not ent.background and ent.draw then
+                ent:draw()
+            end
         end
     end
 end
@@ -150,7 +154,7 @@ end
 function EntityManager.destroy(id)
     local state = StateManager.getCurrentState()
 
-    if objects[state][id] then
+    if objects[state] and objects[state][id] then
         if objects[state][id].die then
             objects[state][id]:die()
         end

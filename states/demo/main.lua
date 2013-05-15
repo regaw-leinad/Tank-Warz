@@ -1,72 +1,50 @@
 function load(args)
-    math.randomseed(os.time())
+    love.graphics.setBackgroundColor(255, 255, 255)
+    love.graphics.setFont(love.graphics.newImageFont(TextureManager.getImagePath("font_bubble"),
+    " abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789.,!?-+/():;%&`'*#=[]\""))
 
-    projectiles = {"projectile", "cloud", "tank", "barrel", "dirt"}
-    proj = 1
-    love.graphics.setBackgroundColor(0, 245, 255)
+    rotate = 10
 
-    for i = 1, 4 do
-        EntityManager.create("cloud", true, { x = -math.random(100, 256), y = math.random(50, 300) })
-    end
-
-    EntityManager.create("terrain", true, { startY = 400, heightBuf = 30, texture = "dirt" })
-
-    EntityManager.create("tank",
-        false,
-        {
-            x = 150,
-            y = 350,
-            scale = .125,
-            direction = "right",
-            barrelOffsetY = -16
-        })
-
-    EntityManager.create("tank",
-        false,
-        {
-            x = 600,
-            y = 400,
-            scale = .125,
-            barrelOffsetY = -16,
-            direction = "left",
-            btnShoot = ".",
-            btnRotateCW = "p",
-            btnRotateCCW = "o",
-            btnAdjustPowerUp = "j",
-            btnAdjustPowerDown = "m"
-        })
+    t = { 100, 100, 300, 100, 300, 200, 100, 200 }
 end
 
 function love.update(dt)
     EntityManager.update(dt)
+
+    t2 = rotateBox(200, 150, rotate, t)
+
+    if insidePoly(love.mouse.getX(), love.mouse.getY(), t) then
+        insidet = "YES"
+    else
+        insidet = "NO"
+    end
+
+    if insidePoly(love.mouse.getX(), love.mouse.getY(), t2) then
+        insidet2 = "YES"
+    else
+        insidet2 = "NO"
+    end
 end
 
 function love.draw()
     EntityManager.draw()
-    love.graphics.print(love.timer.getFPS(), 10, 10)
 
-    love.graphics.setColor(0, 0, 0, 255)
-    love.graphics.print(EntityManager.getAll("tank")[1]:getPower(), 10, 26)
+    love.graphics.setColor(255, 0, 0, 255)
+    love.graphics.polygon("line", t)
+    love.graphics.polygon("line", t2)
+
+    love.graphics.setColor(255, 255, 255, 255)
+    love.graphics.print("Angle: " .. rotate, 10, 10)
+    love.graphics.print("Inside t? - " .. insidet, 10, 26)
+    love.graphics.print("Inside t2? - " .. insidet2, 10, 42)
+
+    love.graphics.print("FPS: " .. love.timer.getFPS(), 10, 580)
 end
 
 function love.keypressed(k)
-    for _,tank in pairs(EntityManager.getAll("tank")) do
-        if k == tank.btnShoot then
-            tank:shoot()
-        elseif k == tank.btnAdjustPowerUp then
-            tank:adjustPower(1)
-        elseif k == tank.btnAdjustPowerDown then
-            tank:adjustPower(-1)
-        end
-    end
-
-    if k == "d" then
-        WIND = ((WIND / METER_SIZE) + 1) * METER_SIZE
-    elseif k == "c" then
-        WIND = ((WIND / METER_SIZE) - 1) * METER_SIZE
-    end
-
-    if k == 'escape' then
-      love.event.quit()
+    if k == "left" then
+        rotate = rotate - 1
+    elseif k == "right" then
+        rotate = rotate + 1
     end
 end

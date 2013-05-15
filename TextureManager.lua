@@ -79,7 +79,7 @@ function TextureManager.getImage(name)
         return love.graphics.newImage(textures[name].imageData)
     else
         print("\'" .. name .. "\' is not a valid texture")
-        return false
+        return nil
     end
 end
 
@@ -91,9 +91,22 @@ function TextureManager.getImageData(name)
         return textures[name].imageData
     else
         print("\'" .. name .. "\' is not a valid texture")
+        return nil
+    end
+end
+
+-- Gets the texture's path in the file system
+-- @param name The texture name
+-- @return The texture's path
+function TextureManager.getImagePath(name)
+    if textures[name] then
+        return textures[name].path
+    else
+        print("\'" .. name .. "\' is not a valid texture")
         return false
     end
 end
+
 
 -- Gets the Image width and height of the specifed texture
 -- @param name The texture name
@@ -103,7 +116,7 @@ function TextureManager.getImageDimensions(name)
         return textures[name].imageData:getWidth(), textures[name].imageData:getHeight()
     else
         print("\'" .. name .. "\' is not a valid texture")
-        return false
+        return nil
     end
 end
 

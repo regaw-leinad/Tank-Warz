@@ -108,11 +108,21 @@ end
 -- @param points The bounding box (as polygon)
 -- @return Table of rotated polygon points (table)
 function rotateBox(refX, refY, angle, points)
-    return {
-        ax, ay = rotatePoint(refX, refY, angle, points.ax, points.ay),
-        bx, by = rotatePoint(refX, refY, angle, points.bx, points.by),
-        cx, cy = rotatePoint(refX, refY, angle, points.cx, points.cy),
-        dx, dy = rotatePoint(refX, refY, angle, points.dx, points.dy),
+    local ax, ay = rotatePoint(refX, refY, -angle, points[1], points[2])
+    local bx, by = rotatePoint(refX, refY, -angle, points[3], points[4])
+    local cx, cy = rotatePoint(refX, refY, -angle, points[5], points[6])
+    local dx, dy = rotatePoint(refX, refY, -angle, points[7], points[8])
+
+    return
+    {
+        round(ax),
+        round(ay),
+        round(bx),
+        round(by),
+        round(cx),
+        round(cy),
+        round(dx),
+        round(dy)
     }
 end
 
@@ -147,7 +157,7 @@ function getTankDrop(x)
     -- prevents the tank from dropping too close to a vertex
     local vertexBuf = 15
 
-     for i = 1, points, 2 do
+    for i = 1, points, 2 do
         local leftX = v[i]
         local leftY = v[i+1]
         local rightX = v[i+2]
@@ -161,12 +171,12 @@ function getTankDrop(x)
                 -- between leftX and rightX happens to be too narrow
                 x = (leftX + rightX) / 2
 
-            else if x < (leftX + vertexBuf) then
+            elseif x < (leftX + vertexBuf) then
 
                 -- too close to the left vertex
                 x = leftX + vertexBuf
 
-            else if (rightX - vertexBuf) < x then
+            elseif (rightX - vertexBuf) < x then
 
                 -- too close to the right vertex
                 x = rightX - vertexBuf

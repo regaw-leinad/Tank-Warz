@@ -31,10 +31,10 @@ end
 -- @param poly The table of polygon points
 -- @return If the point is inside the poly (boolean)
 function insidePoly(x, y, poly)
-    local test1 = cross(poly.ax, poly.ay, poly.bx, poly.by, x, y) > 0
-    local test2 = cross(poly.bx, poly.by, poly.cx, poly.cy, x, y) > 0
-    local test3 = cross(poly.cx, poly.cy, poly.dx, poly.dy, x, y) > 0
-    local test4 = cross(poly.dx, poly.dy, poly.ax, poly.ay, x, y) > 0
+    local test1 = cross(poly[1], poly[2], poly[3], poly[4], x, y) > 0
+    local test2 = cross(poly[3], poly[4], poly[5], poly[6], x, y) > 0
+    local test3 = cross(poly[5], poly[6], poly[7], poly[8], x, y) > 0
+    local test4 = cross(poly[7], poly[8], poly[1], poly[2], x, y) > 0
 
     -- the point x,y is inside abcd iff all tests are true
     -- otherwise the point is outside
@@ -72,7 +72,7 @@ function terrainCollide(x, y)
 
         if leftX <= x and x <= rightX then
 
-            local magic = cross(leftX, leftY, rightX, rightY, x, y)            
+            local magic = cross(leftX, leftY, rightX, rightY, x, y)
 
             -- No collision
             if magic < 0 then
@@ -95,7 +95,7 @@ function tankCollide(x, y, damage)
         local sx, sy = tank:getPos()
         local sw, sh = tank:getScaledSize()
 
-        if insideBox(x, y, sx - sw / 2, sy - sh / 2, sw, sh) then
+        if insidePoly(x, y, tank:getBoundingPoly()) then
             tank:damage(damage)
 
             return true

@@ -57,12 +57,27 @@ function tank:load(data)
     end
 
     self:setRelativeBarrelAngle(data.barrelAngle or 0)
+
+    -- The initial hitbox (not rotated)
+    local box =
+    {
+        self.x - self.image:getWidth() / 2 * self.scale,
+        self.y - self.image:getHeight() / 2 * self.scale,
+        self.x + self.image:getWidth() / 2 * self.scale,
+        self.y - self.image:getHeight() / 2 * self.scale,
+        self.x + self.image:getWidth() / 2 * self.scale,
+        self.y + self.image:getHeight() / 2 * self.scale,
+        self.x - self.image:getWidth() / 2 * self.scale,
+        self.y + self.image:getHeight() / 2 * self.scale,
+    }
+
+    self.poly = rotateBox(self.x, self.y, self.angle, box)
 end
 
 function tank:update(dt)
-    if self.hp <= 0 then
-        EntityManager.destroy(self.id)
-    end
+    -- if self.hp <= 0 then
+    --     EntityManager.destroy(self.id)
+    -- end
 end
 
 function tank:draw()
@@ -76,17 +91,15 @@ function tank:draw()
         self:drawBody()
     end
 
-    -- local w, h = self:getScaledSize()
-
-    -- love.graphics.setColor(255, 0, 0, 255)
-    -- love.graphics.rectangle("line", self.x - w / 2, self.y - h / 2, w, h)
+    love.graphics.setColor(255, 0, 0, 255)
+    love.graphics.polygon("line", self:getBoundingPoly())
 end
 
 function tank:drawBody()
     love.graphics.draw(self.image,
         self.x,
         self.y,
-        0,
+        math.rad(self.angle),
         self.scale * self.direction,
         self.scale,
         self.image:getWidth() / 2,
@@ -99,7 +112,7 @@ function tank:drawBarrel()
     love.graphics.draw(self.barrelImage,
         bx,
         by,
-        math.rad(self.barrelAngle),
+        math.rad(self.barrelAngle + self.angle),
         self.scale,
         self.scale,
         self.barrelPivotOffset,
@@ -186,7 +199,8 @@ end
 -- Gets the X and Y coordinates of the beginning of the barrel
 -- @return The barrel's position (int, int)
 function tank:getBarrelPos()
-    return self.x + self.barrelOffsetX * self.scale, self.y + self.barrelOffsetY * self.scale
+    return self.x + math.cos(math.rad(self.angle)) * self.barrelOffsetX * self.scale,
+    self.y + math.sin(math.rad(self.angle)) * self.barrelOffsetY * self.scale
 end
 
 -- Gets the X and Y coordinate of where the projectile will start from
@@ -194,14 +208,18 @@ end
 function tank:getProjectileStartPos()
     local x, y = self:getBarrelPos()
 
-    return x + math.cos(math.rad(self.barrelAngle)) * (self.barrelImage:getWidth() - self.barrelPivotOffset * self.scale) * self.scale,
-        y + math.sin(math.rad(self.barrelAngle)) * (self.barrelImage:getWidth() - self.barrelPivotOffset * self.scale) * self.scale
+    return
+        x + math.cos(math.rad(self.barrelAngle + self.angle)) * (self.barrelImage:getWidth() -
+            self.barrelPivotOffset * self.scale) * self.scale,
+
+        y + math.sin(math.rad(self.barrelAngle + self.angle)) * (self.barrelImage:getWidth() -
+            self.barrelPivotOffset * self.scale) * self.scale
 end
 
 -- Returns the bounding polygon
 -- @return The bounding polygon (table)
 function tank:getBoundingPoly()
-    return nil
+    return self.poly
 end
 
 -- Gets the tank's current HP
@@ -221,7 +239,7 @@ end
 function tank:shoot(projectile)
     if self:isAlive() then
         local px, py = self:getProjectileStartPos()
-        ProjectileManager.create(projectile, px, py, self.barrelAngle, self.power, self)
+        ProjectileManager.create(projectile, px, py, self.barrelAngle + self.angle, self.power, self)
     end
 end
 
