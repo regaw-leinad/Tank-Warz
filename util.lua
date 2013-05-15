@@ -4,6 +4,7 @@
 
     Authors:
         Dan Wager
+        Daniel Rolandi
 --]]
 
 -- Checks if a string starts with a specified string
@@ -103,17 +104,79 @@ end
 -- Rotates a bounding box and returns the rotated polygon
 -- @param refX The pivot X coordinate
 -- @param refY The pivot Y coordinate
--- @param angle The angle to rotate
+-- @param angle The angle to rotate, in degrees CW
 -- @param points The bounding box (as polygon)
 -- @return Table of rotated polygon points (table)
 function rotateBox(refX, refY, angle, points)
-    return nil
+    return {
+        ax, ay = rotatePoint(refX, refY, angle, points.ax, points.ay),
+        bx, by = rotatePoint(refX, refY, angle, points.bx, points.by),
+        cx, cy = rotatePoint(refX, refY, angle, points.cx, points.cy),
+        dx, dy = rotatePoint(refX, refY, angle, points.dx, points.dy),
+    }
+end
+
+-- Rotates a point x,y and returns the point x',y'
+-- @param refX The pivot X coordinate
+-- @param refY The pivot Y coordinate
+-- @param angle The angle to rotate, in degrees CW
+-- @param x The X coordinate of the point
+-- @param y The Y coordinate of the point
+-- @return Point x',y' after rotation (int, int)
+function rotatePoint(refX, refY, angle, x, y)
+    local fixX = x - refX
+    local fixY = y - refY
+
+    local resultX = fixX * math.cos(math.rad(angle)) + fixY * math.sin(math.rad(angle)) + refX
+    local resultY = -fixX * math.sin(math.rad(angle)) + fixY * math.cos(math.rad(angle)) + refY
+
+    return resultX, resultY
 end
 
 -- Gets the location and angle of a new tank
 -- @param x The X coordinate of the tank
--- @param terrainPoly The terrain coordinate points
--- @return The Y coordinate and angle of the tank for placement (int, int)
-function getTankDrop(x, terrainPoly)
+-- @return The Y coordinate and angle (CW = positive) of the tank for placement (int, int)
+function getTankDrop(x)
+    local terrain = EntityManager.getAll("terrain")[1]
+    local v = terrain:getCoords()
+    local points = terrain:getPointCount()
 
+    -- sinks the tank a few pixels under the terrain
+    local dropBuf = 6
+
+    -- prevents the tank from dropping too close to a vertex
+    local vertexBuf = 15
+
+     for i = 1, points, 2 do
+        local leftX = v[i]
+        local leftY = v[i+1]
+        local rightX = v[i+2]
+        local rightY = v[i+3]
+
+        if leftX <= x and x <= rightX then
+
+            -- repositions the tank drop if too close to either vertex
+            if (leftX + vertexBuf) >= (rightX - vertexBuf) then
+
+                -- between leftX and rightX happens to be too narrow
+                x = (leftX + rightX) / 2
+
+            else if x < (leftX + vertexBuf) then
+
+                -- too close to the left vertex
+                x = leftX + vertexBuf
+
+            else if (rightX - vertexBuf) < x then
+
+                -- too close to the right vertex
+                x = rightX - vertexBuf
+
+            end
+
+            local resultY = (x - leftX) * (rightY - leftY) / (rightX - leftX) + leftY
+            local angle = math.atan2(rightY - leftY, rightX - leftX)
+
+            return resultY - dropBuf, math.deg(angle)
+        end
+    end
 end

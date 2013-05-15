@@ -31,7 +31,28 @@ end
 -- @param poly The table of polygon points
 -- @return If the point is inside the poly (boolean)
 function insidePoly(x, y, poly)
-    return false
+    local test1 = cross(poly.ax, poly.ay, poly.bx, poly.by, x, y) > 0
+    local test2 = cross(poly.bx, poly.by, poly.cx, poly.cy, x, y) > 0
+    local test3 = cross(poly.cx, poly.cy, poly.dx, poly.dy, x, y) > 0
+    local test4 = cross(poly.dx, poly.dy, poly.ax, poly.ay, x, y) > 0
+
+    -- the point x,y is inside abcd iff all tests are true
+    -- otherwise the point is outside
+    return test1 and test2 and test3 and test4
+end
+
+-- Calculates the cross product of the three points ABP
+-- @param ax The X coordinate of the point a
+-- @param ay The Y coordinate of the point a
+-- @param bx The X coordinate of the point b
+-- @param by The Y coordinate of the point b
+-- @param px The X coordinate of the point p
+-- @param py The Y coordinate of the point p
+-- @return The cross product of ABP
+function cross(ax, ay, bx, by, px, py)
+    return (ax * by) - (ax * py) -
+            (ay * bx) + (ay * px) +
+            (bx * py) - (px * by)
 end
 
 -- Checks if the point has collided with the terrain
@@ -51,9 +72,7 @@ function terrainCollide(x, y)
 
         if leftX <= x and x <= rightX then
 
-            local magic = (leftX * rightY) - (leftX * y) -
-                            (leftY * rightX) + (leftY * x) +
-                            (rightX * y) - (x * rightY)
+            local magic = cross(leftX, leftY, rightX, rightY, x, y)            
 
             -- No collision
             if magic < 0 then
