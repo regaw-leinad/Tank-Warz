@@ -199,7 +199,7 @@ function tank:getProjectileStartPos()
 end
 
 -- Returns the bounding polygon
--- @return The bounding polygon
+-- @return The bounding polygon (table)
 function tank:getBoundingPoly()
     return nil
 end

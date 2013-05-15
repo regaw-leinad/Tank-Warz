@@ -105,7 +105,7 @@ end
 -- @param refY The pivot Y coordinate
 -- @param angle The angle to rotate
 -- @param points The bounding box (as polygon)
--- @return Table of rotated polygon points
+-- @return Table of rotated polygon points (table)
 function rotateBox(refX, refY, angle, points)
     return nil
 end
@@ -113,7 +113,7 @@ end
 -- Gets the location and angle of a new tank
 -- @param x The X coordinate of the tank
 -- @param terrainPoly The terrain coordinate points
--- @return The
+-- @return The Y coordinate and angle of the tank for placement (int, int)
 function getTankDrop(x, terrainPoly)
 
 end

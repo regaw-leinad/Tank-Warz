@@ -29,6 +29,7 @@ end
 -- @param x The X coordinate of the point
 -- @param y The Y coordinate of the point
 -- @param poly The table of polygon points
+-- @return If the point is inside the poly (boolean)
 function insidePoly(x, y, poly)
     return false
 end
