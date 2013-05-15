@@ -108,10 +108,10 @@ end
 -- @param points The bounding box (as polygon)
 -- @return Table of rotated polygon points (table)
 function rotateBox(refX, refY, angle, points)
-    local ax, ay = rotatePoint(refX, refY, -angle, points[1], points[2])
-    local bx, by = rotatePoint(refX, refY, -angle, points[3], points[4])
-    local cx, cy = rotatePoint(refX, refY, -angle, points[5], points[6])
-    local dx, dy = rotatePoint(refX, refY, -angle, points[7], points[8])
+    local ax, ay = rotatePoint(refX, refY, angle, points[1], points[2])
+    local bx, by = rotatePoint(refX, refY, angle, points[3], points[4])
+    local cx, cy = rotatePoint(refX, refY, angle, points[5], points[6])
+    local dx, dy = rotatePoint(refX, refY, angle, points[7], points[8])
 
     return
     {
@@ -137,8 +137,8 @@ function rotatePoint(refX, refY, angle, x, y)
     local fixX = x - refX
     local fixY = y - refY
 
-    local resultX = fixX * math.cos(math.rad(angle)) + fixY * math.sin(math.rad(angle)) + refX
-    local resultY = -fixX * math.sin(math.rad(angle)) + fixY * math.cos(math.rad(angle)) + refY
+    local resultX = fixX * math.cos(math.rad(angle)) - fixY * math.sin(math.rad(angle)) + refX
+    local resultY = fixX * math.sin(math.rad(angle)) + fixY * math.cos(math.rad(angle)) + refY
 
     return resultX, resultY
 end

@@ -20,3 +20,5 @@ WIND = 0
 -- Adjust the wind and gravity to scale
 GRAVITY = GRAVITY * METER_SIZE
 WIND = WIND * METER_SIZE
+
+BUBBLE_FONT = nil

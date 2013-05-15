@@ -31,22 +31,6 @@ function tank:load(data)
     -- Init data if not passed so we don't have errors
     if not data then data = {} end
 
-    -- Set properties
-    self.image = TextureManager.getImage(data.image or "tank_red")
-    self:setPos(data.x or 0, data.y or 0)
-    self.barrelImage = TextureManager.getImage(data.barrelImage or "tank_red_barrel")
-    self.barrelOffsetX = data.barrelOffsetX or 0
-    self.barrelOffsetY = data.barrelOffsetY or 0
-    self.barrelPivotOffset = data.barrelPivotOffset or 0
-    self.barrelOnTop = data.barrelOnTop or false
-    self.scale = data.scale or 1
-    self.power = data.power or 10
-    self.angle = data.angle or 0
-    self.barrelSpeed = data.barrelSpeed or 50
-    self.maxHp = data.maxHp or 100
-    self.hp = data.hp or 100
-    self.player = EntityManager.getCount("tank") + 1
-
     local dir = data.direction or "right"
     if dir == "left" then
         self.direction = -1
@@ -55,6 +39,23 @@ function tank:load(data)
         self.direction = 1
         self.angleOffset = 0
     end
+
+    -- Set properties
+    self.image = TextureManager.getImage(data.image or "tank_red")
+    self.angle = data.angle or 0
+    self:setPos(data.x or 0, data.y or 0)
+    self.barrelImage = TextureManager.getImage(data.barrelImage or "tank_red_barrel")
+    self.barrelOffsetX = data.barrelOffsetX or 0
+    self.barrelOffsetY = data.barrelOffsetY or 0
+    self.barrelPivotOffset = data.barrelPivotOffset or 0
+    self.barrelOnTop = data.barrelOnTop or false
+    self.scale = data.scale or 1
+    self.power = data.power or 10
+
+    self.barrelSpeed = data.barrelSpeed or 50
+    self.maxHp = data.maxHp or 100
+    self.hp = data.hp or 100
+    self.player = EntityManager.getCount("tank") + 1
 
     self:setRelativeBarrelAngle(data.barrelAngle or 0)
 
@@ -172,6 +173,12 @@ end
 -- @param a The angle
 function tank:setRelativeBarrelAngle(a)
     self.barrelAngle = a * (-self.direction) + self.angleOffset
+end
+
+-- Gets the exact barrel angle
+-- @return The barrel angle
+function tank:getBarrelAngle()
+    return self.angle + self.barrelAngle
 end
 
 -- Gets a value indicating the power of the tank

@@ -91,13 +91,8 @@ end
 -- @return If there is a collision (boolean)
 function tankCollide(x, y, damage)
     for _,tank in ipairs(EntityManager.getAll("tank")) do
-
-        local sx, sy = tank:getPos()
-        local sw, sh = tank:getScaledSize()
-
         if insidePoly(x, y, tank:getBoundingPoly()) then
             tank:damage(damage)
-
             return true
         end
     end

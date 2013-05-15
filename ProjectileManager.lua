@@ -1,5 +1,5 @@
 --[[
-    Projectile.lua
+    ProjectileManager.lua
     Manages the different projectiles in the application
 
     Authors:
@@ -20,7 +20,7 @@ local projectiles =
     {
         image = "projectile_pink",
         scale = 1,
-        speedScale = 1.1,
+        speedScale = 1,
         damage = 10
     },
 
@@ -28,7 +28,7 @@ local projectiles =
     {
         image = "projectile_black",
         scale = 1,
-        speedScale = 1.1,
+        speedScale = 1.5,
         damage = 20
     }
 }

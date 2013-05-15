@@ -5,6 +5,10 @@ local players = {}
 function load(args)
     LevelManager.load(args.lvl)
 
+    BUBBLE_FONT = love.graphics.newImageFont(TextureManager.getImagePath("font_bubble"),
+    " abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789.,!?-+/():;%&`'*#=[]\"")
+    love.graphics.setFont(BUBBLE_FONT)
+
     players[PLAYER1] =
     {
         projectile = ProjectileManager.BLACK
@@ -36,6 +40,7 @@ end
 
 function love.draw()
     EntityManager.draw()
+    drawHUD()
 end
 
 function love.keypressed(k)
@@ -54,4 +59,50 @@ end
 -- Switches the player from 1 -> 2 or 2 -> 1
 function switchPlayer()
     CURRENT_PLAYER = CURRENT_PLAYER % 2 + 1
+end
+
+function drawHUD()
+    local trans = 200
+
+    love.graphics.setColor(0, 0, 0, trans)
+    love.graphics.rectangle("fill", 550, 0, 250, 150)
+
+    love.graphics.setColor(255, 255, 255, trans)
+    love.graphics.print("Name", 555, 0)
+    love.graphics.print("HP", 555, 16)
+
+    love.graphics.print("PW", 555, 32)
+
+    local t2M = TankManager.getPlayerTank(CURRENT_PLAYER):getMaxHp()
+    local t2hp = TankManager.getPlayerTank(CURRENT_PLAYER):getHp()
+    local ratio = t2hp / t2M
+
+    love.graphics.setColor(0, 240, 0, trans)
+    love.graphics.rectangle("fill", 580, 18, ratio * 100, 12)
+
+    love.graphics.setColor(240, 0, 0, trans)
+    love.graphics.rectangle("fill", 580 + 100 * ratio, 18, 100 - (ratio * 100), 12)
+
+    love.graphics.setColor(255, 255, 255, trans)
+    love.graphics.print(t2hp, 685, 16)
+
+    local max = 40
+    local power = TankManager.getPlayerTank(CURRENT_PLAYER):getPower()
+    local ratio2 = power / max
+
+    love.graphics.setColor(0, 240, 0, trans)
+    love.graphics.rectangle("fill", 580, 34, ratio2 * 100, 12)
+
+    love.graphics.setColor(240, 0, 0, trans)
+    love.graphics.rectangle("fill", 580 + 100 * ratio2, 34, 100 - (ratio2 * 100), 12)
+
+    love.graphics.setColor(255, 255, 255, trans)
+    love.graphics.circle("line", 755, 40, 30)
+    love.graphics.line(755, 6, 755, 74)
+    love.graphics.line(723, 40, 788, 40)
+
+    local b = math.rad(TankManager.getPlayerTank(CURRENT_PLAYER):getBarrelAngle())
+    love.graphics.setColor(255, 0, 0, trans)
+    love.graphics.line(755, 40, 755 + 34 * math.cos(b), 40 + 34 * math.sin(b))
+
 end
