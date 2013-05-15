@@ -20,6 +20,7 @@ local tank = EntityManager.derive("base")
       barrelOnTop - If the barrel should be drawn on top of the tank
       scale - The image scale
       power - The initial tank power
+      angle - The angle of the tank
       barrelAngle - The initial angle of the barrel
       barrelSpeed - The speed of barrel's movement
       maxHp - The max health of the tank
@@ -40,6 +41,7 @@ function tank:load(data)
     self.barrelOnTop = data.barrelOnTop or false
     self.scale = data.scale or 1
     self.power = data.power or 10
+    self.angle = data.angle or 0
     self.barrelSpeed = data.barrelSpeed or 50
     self.maxHp = data.maxHp or 100
     self.hp = data.hp or 100
@@ -73,6 +75,11 @@ function tank:draw()
         self:drawBarrel()
         self:drawBody()
     end
+
+    -- local w, h = self:getScaledSize()
+
+    -- love.graphics.setColor(255, 0, 0, 255)
+    -- love.graphics.rectangle("line", self.x - w / 2, self.y - h / 2, w, h)
 end
 
 function tank:drawBody()
@@ -112,9 +119,9 @@ function tank:rotateBarrel(dir, dt)
     local angle = self:getRelativeBarrelAngle()
 
     if angle <= 0 then
-        self.barrelAngle = self:setRelativeBarrelAngle(0)
-    elseif angle >= 90 then
-        self.barrelAngle = self:setRelativeBarrelAngle(90)
+        self:setRelativeBarrelAngle(0)
+    elseif angle >= 180 then
+        self:setRelativeBarrelAngle(180)
     end
 end
 
@@ -191,6 +198,12 @@ function tank:getProjectileStartPos()
         y + math.sin(math.rad(self.barrelAngle)) * (self.barrelImage:getWidth() - self.barrelPivotOffset * self.scale) * self.scale
 end
 
+-- Returns the bounding polygon
+-- @return The bounding polygon
+function tank:getBoundingPoly()
+    return nil
+end
+
 -- Gets the tank's current HP
 -- @return The tank's current HP (int)
 function tank:getHp()
@@ -208,7 +221,7 @@ end
 function tank:shoot(projectile)
     if self:isAlive() then
         local px, py = self:getProjectileStartPos()
-        ProjectileManager.create(projectile, px, py, self.barrelAngle, self.power)
+        ProjectileManager.create(projectile, px, py, self.barrelAngle, self.power, self)
     end
 end
 

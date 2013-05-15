@@ -31,6 +31,7 @@ function projectile:load(data)
     self.x = data.x or 0
     self.y = data.y or 0
     self.damage = data.damage or 10
+    self.parent = data.parent
 end
 
 function projectile:update(dt)

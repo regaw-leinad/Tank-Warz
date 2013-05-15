@@ -73,16 +73,16 @@ end
 -- @param x The X coordinate of the tank
 -- @param y The Y coordinate of the tank
 -- @param direction The direction of the tank
--- @param angle The relative tank angle
+-- @param angle The tank angle
 -- @param barrelAngle The initial relative barrel angle
 function TankManager.create(tank, x, y, direction, angle, barrelAngle)
     local tankData = get(tank)
 
-    tankData["x"] = x
-    tankData["y"] = y
-    tankData["direction"] = direction
-    tankData["angle"] = angle or 0
-    tankData["barrelAngle"] = barrelAngle or 0
+    tankData.x = x
+    tankData.y = y
+    tankData.direction = direction
+    tankData.angle = angle or 0
+    tankData.barrelAngle = barrelAngle or 0
 
     if tankData then
         EntityManager.create("tank", false, tankData)

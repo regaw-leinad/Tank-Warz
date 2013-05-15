@@ -58,13 +58,15 @@ end
 -- @param y The Y coordinate of the projectile
 -- @param angle The initial angle of travel
 -- @param power The magnitude of the force
-function ProjectileManager.create(projectile, x, y, angle, power)
+-- @param parent The entity that spawned the projectile
+function ProjectileManager.create(projectile, x, y, angle, power, parent)
     local projData = get(projectile)
 
-    projData["x"] = x
-    projData["y"] = y
-    projData["angle"] = angle
-    projData["power"] = power
+    projData.x = x
+    projData.y = y
+    projData.angle = angle
+    projData.power = power
+    projData.parent = parent
 
     if projData then
         EntityManager.create("projectile", false, projData)

@@ -99,3 +99,21 @@ function deepCopy(orig)
     end
     return copy
 end
+
+-- Rotates a bounding box and returns the rotated polygon
+-- @param refX The pivot X coordinate
+-- @param refY The pivot Y coordinate
+-- @param angle The angle to rotate
+-- @param points The bounding box (as polygon)
+-- @return Table of rotated polygon points
+function rotateBox(refX, refY, angle, points)
+    return nil
+end
+
+-- Gets the location and angle of a new tank
+-- @param x The X coordinate of the tank
+-- @param terrainPoly The terrain coordinate points
+-- @return The
+function getTankDrop(x, terrainPoly)
+
+end

@@ -25,6 +25,14 @@ function insideBox(px, py, bx, by, bw, bh)
     return false
 end
 
+-- Checks if point x, y is inside of the poly
+-- @param x The X coordinate of the point
+-- @param y The Y coordinate of the point
+-- @param poly The table of polygon points
+function insidePoly(x, y, poly)
+    return false
+end
+
 -- Checks if the point has collided with the terrain
 -- @param x The X coordinate
 -- @param y The Y coordinate
