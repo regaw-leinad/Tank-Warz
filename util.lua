@@ -39,7 +39,7 @@ end
 -- @param midX The mid X coordinate
 -- @param midY The mid Y coordinate
 -- @param poly The polygon to cut
--- @return A table containing a cut up polygon (table)
+-- @return A table containing multiple smaller polygons (table)
 function polygonCut(midX, midY, poly)
     local t = {}
 
@@ -51,7 +51,15 @@ function polygonCut(midX, midY, poly)
     tCount = tCount + 1
 
     while count < #poly - 4 do
-        t[tCount] = { poly[count], poly[count + 1], midX, midY, poly[count + 2], poly[count + 3] }
+        t[tCount] =
+        {
+            poly[count],
+            poly[count + 1],
+            midX,
+            midY,
+            poly[count + 2],
+            poly[count + 3]
+        }
 
         tCount = tCount + 1
         count = count + 2
@@ -137,22 +145,24 @@ function rotatePoint(refX, refY, angle, x, y)
     local fixX = x - refX
     local fixY = y - refY
 
-    local resultX = fixX * math.cos(math.rad(angle)) - fixY * math.sin(math.rad(angle)) + refX
-    local resultY = fixX * math.sin(math.rad(angle)) + fixY * math.cos(math.rad(angle)) + refY
+    local resultX = fixX * math.cos(math.rad(angle)) - fixY *
+        math.sin(math.rad(angle)) + refX
+    local resultY = fixX * math.sin(math.rad(angle)) + fixY *
+        math.cos(math.rad(angle)) + refY
 
     return resultX, resultY
 end
 
 -- Gets the location and angle of a new tank
 -- @param x The X coordinate of the tank
--- @return The Y coordinate and angle (CW = positive) of the tank for placement (int, int)
+-- @return The X and Y coordinate and angle (CW = positive) of the tank (int, int, int)
 function getTankDrop(x)
     local terrain = EntityManager.getAll("terrain")[1]
     local v = terrain:getCoords()
     local points = terrain:getPointCount()
 
-    -- sinks the tank a few pixels under the terrain
-    local dropBuf = 6
+    -- raises the tank a few pixels above the terrain
+    local dropBuf = 12
 
     -- prevents the tank from dropping too close to a vertex
     local vertexBuf = 15
@@ -164,29 +174,24 @@ function getTankDrop(x)
         local rightY = v[i+3]
 
         if leftX <= x and x <= rightX then
-
             -- repositions the tank drop if too close to either vertex
             if (leftX + vertexBuf) >= (rightX - vertexBuf) then
-
                 -- between leftX and rightX happens to be too narrow
                 x = (leftX + rightX) / 2
-
             elseif x < (leftX + vertexBuf) then
-
                 -- too close to the left vertex
                 x = leftX + vertexBuf
-
             elseif (rightX - vertexBuf) < x then
-
                 -- too close to the right vertex
                 x = rightX - vertexBuf
-
             end
 
             local resultY = (x - leftX) * (rightY - leftY) / (rightX - leftX) + leftY
             local angle = math.atan2(rightY - leftY, rightX - leftX)
 
-            return resultY - dropBuf * math.sin(angle), math.deg(angle)
+            return x - dropBuf * math.sin(angle),
+                resultY - dropBuf * math.cos(angle),
+                math.deg(angle)
         end
     end
 end

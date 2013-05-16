@@ -76,12 +76,6 @@ function tank:load(data)
     self.poly = rotateBox(self.x, self.y, self.angle, box)
 end
 
-function tank:update(dt)
-    -- if self.hp <= 0 then
-    --     EntityManager.destroy(self.id)
-    -- end
-end
-
 function tank:draw()
     love.graphics.setColor(255, 255, 255, 255)
 
@@ -95,6 +89,7 @@ function tank:draw()
 
     -- love.graphics.setColor(255, 0, 0, 255)
     -- love.graphics.polygon("line", self:getBoundingPoly())
+    -- love.graphics.circle("fill", self.x, self.y, 2)
 end
 
 function tank:drawBody()
@@ -215,8 +210,8 @@ end
 -- Gets the X and Y coordinates of the beginning of the barrel
 -- @return The barrel's position (int, int)
 function tank:getBarrelPos()
-    return self.x + math.cos(math.rad(self.angle)) * self.barrelOffsetX * self.scale,
-    self.y + math.sin(math.rad(self.angle)) * self.barrelOffsetY * self.scale
+    return self.x + math.cos(math.rad(self.angle)) * self.barrelOffsetX * self.direction * self.scale,
+        self.y + math.sin(math.rad(self.angle)) * self.barrelOffsetY * self.direction * self.scale
 end
 
 -- Gets the X and Y coordinate of where the projectile will start from

@@ -70,22 +70,22 @@ end
 
 -- Creates a new tank entity
 -- @param tank The tank
--- @param x The X coordinate of the tank
--- @param y The Y coordinate of the tank
+-- @param xMin The minimum X coordinate of the tank
+-- @param xMax The maximum X coordinate of the tank
 -- @param direction The direction of the tank
--- @param angle The tank angle
--- @param barrelAngle The initial relative barrel angle
-function TankManager.create(tank, x, y, direction, angle, barrelAngle)
-    local tankData = get(tank)
+-- @return The tank entity
+function TankManager.create(tank, xMin, xMax, direction)
+    if tanks[tank] then
+        local tankData = get(tank)
 
-    tankData.x = x
-    tankData.y = y
-    tankData.direction = direction
-    tankData.angle = angle or 0
-    tankData.barrelAngle = barrelAngle or 0
+        tankData.x, tankData.y, tankData.angle = getTankDrop(math.random(xMin, xMax))
+        tankData.direction = direction
+        tankData.barrelAngle = 0
 
-    if tankData then
-        EntityManager.create("tank", false, tankData)
+        return EntityManager.create("tank", false, tankData)
+    else
+        print("No tank \'" .. tank .. "\'")
+        return nil
     end
 end
 

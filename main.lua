@@ -5,7 +5,6 @@ end
 --- Main love.load
 function love.load()
     --inspect = require("inspect")
-    require("Gameplay")
     require("collision")
     require("util")
     require("TextureManager")

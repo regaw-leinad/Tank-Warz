@@ -21,4 +21,7 @@ WIND = 0
 GRAVITY = GRAVITY * METER_SIZE
 WIND = WIND * METER_SIZE
 
-BUBBLE_FONT = nil
+-- Player 1 constant value
+PLAYER1 = 1
+-- Player 2 constant value
+PLAYER2 = 2

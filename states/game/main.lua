@@ -2,8 +2,9 @@
 local players = {}
 
 function load(args)
+    -- Load level
     LevelManager.load(args.lvl)
-
+    -- Set font
     love.graphics.setFont(
         love.graphics.newImageFont(
             TextureManager.getImagePath("font_bubble"),
@@ -13,25 +14,23 @@ function load(args)
         )
     )
 
-    -- Fix the drop algorithm to return offset x and y
-    local y1, a1 = getTankDrop(150)
-    local y2, a2 = getTankDrop(600)
+    -- Create tanks
+    TankManager.create(TankManager.GREY, 40, SCREEN_WIDTH / 2 - 40, "right")
+    TankManager.create(TankManager.GREY, SCREEN_WIDTH / 2 + 40, SCREEN_WIDTH - 40, "left")
 
-    TankManager.create(TankManager.GREY, 150, y1, "right", a1, 0)
-    TankManager.create(TankManager.GREY, 600, y2, "left", a2, 0)
-
+    -- Init player data
     players[PLAYER1] =
     {
         projectile = ProjectileManager.BLACK,
         tank = TankManager.getPlayerTank(PLAYER1)
     }
-
     players[PLAYER2] =
     {
         projectile = ProjectileManager.PINK,
         tank = TankManager.getPlayerTank(PLAYER2)
     }
 
+    -- Set current player
     CURRENT_PLAYER = PLAYER1
 end
 
@@ -58,11 +57,11 @@ function love.keypressed(k)
         players[CURRENT_PLAYER].tank:adjustPower(1)
     elseif k == "z" then
         players[CURRENT_PLAYER].tank:adjustPower(-1)
-    elseif k == "escape" then
-      love.event.quit()
     elseif k == "left" or k == "right" then
         players[CURRENT_PLAYER].projectile = (players[CURRENT_PLAYER].projectile)
             % ProjectileManager.getNumOfProjectiles() + 1
+    elseif k == "escape" then
+      love.event.quit()
     end
 end
 
@@ -81,6 +80,7 @@ function drawHUD()
     local cR = 20
     local cP = 2
 
+    love.graphics.setColor(255, 255, 255, 255)
     love.graphics.print(love.timer.getFPS(), 760, 580)
 
     for i = 1, 2, 1 do
@@ -148,7 +148,6 @@ function drawHUD()
 
         love.graphics.setColor(255, 255, 255, trans)
         love.graphics.print("A:" .. round(b), cX - cR - 10, cY + cR + 5)
-
 
         -- Projectile stuff
         love.graphics.setColor(255, 255, 255, trans)
