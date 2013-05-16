@@ -20,6 +20,7 @@ local tank = EntityManager.derive("base")
       barrelOnTop - If the barrel should be drawn on top of the tank
       scale - The image scale
       power - The initial tank power
+      maxPower - The max power of the tank
       angle - The angle of the tank
       barrelAngle - The initial angle of the barrel
       barrelSpeed - The speed of barrel's movement
@@ -50,8 +51,8 @@ function tank:load(data)
     self.barrelPivotOffset = data.barrelPivotOffset or 0
     self.barrelOnTop = data.barrelOnTop or false
     self.scale = data.scale or 1
-    self.power = data.power or 10
-
+    self.power = data.power or 20
+    self.maxPower = data.maxPower or 40
     self.barrelSpeed = data.barrelSpeed or 50
     self.maxHp = data.maxHp or 100
     self.hp = data.hp or 100
@@ -92,8 +93,8 @@ function tank:draw()
         self:drawBody()
     end
 
-    love.graphics.setColor(255, 0, 0, 255)
-    love.graphics.polygon("line", self:getBoundingPoly())
+    -- love.graphics.setColor(255, 0, 0, 255)
+    -- love.graphics.polygon("line", self:getBoundingPoly())
 end
 
 function tank:drawBody()
@@ -158,7 +159,7 @@ end
 function tank:heal(n)
     self.hp = self.hp + n
 
-    if self.hp >self.maxHp then
+    if self.hp > self.maxHp then
         self.hp = self.maxHp
     end
 end
@@ -177,7 +178,7 @@ end
 
 -- Gets the exact barrel angle
 -- @return The barrel angle
-function tank:getBarrelAngle()
+function tank:getAbsoluteBarrelAngle()
     return self.angle + self.barrelAngle
 end
 
@@ -185,6 +186,12 @@ end
 -- @return The power of the tank (int)
 function tank:getPower()
     return self.power
+end
+
+-- Gets a value indicating the max power of the tank
+-- @return The max power of the tank
+function tank:getMaxPower()
+    return self.maxPower
 end
 
 -- Gets a value indicating if the tank is alive
@@ -200,6 +207,8 @@ function tank:adjustPower(n)
 
     if self.power < 0 then
         self.power = 0
+    elseif self.power > self.maxPower then
+        self.power = self.maxPower
     end
 end
 

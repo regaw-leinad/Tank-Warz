@@ -28,7 +28,7 @@ local projectiles =
     {
         image = "projectile_black",
         scale = 1,
-        speedScale = 1.5,
+        speedScale = 1,
         damage = 20
     }
 }
@@ -77,4 +77,10 @@ end
 -- @return The number of projectile entities in the current state (int)
 function ProjectileManager.getCount()
     return EntityManager.getCount("projectile")
+end
+
+-- Gets the number of registered projectiles
+-- @return The number of registered projectiles
+function ProjectileManager.getNumOfProjectiles()
+    return #projectiles
 end

@@ -1,38 +1,45 @@
 -- Main game state
--- args - level name
 local players = {}
 
 function load(args)
     LevelManager.load(args.lvl)
 
-    BUBBLE_FONT = love.graphics.newImageFont(TextureManager.getImagePath("font_bubble"),
-    " abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789.,!?-+/():;%&`'*#=[]\"")
-    love.graphics.setFont(BUBBLE_FONT)
+    love.graphics.setFont(
+        love.graphics.newImageFont(
+            TextureManager.getImagePath("font_bubble"),
+                " abcdefghijklmnopqrstuvwxyz" ..
+                "ABCDEFGHIJKLMNOPQRSTUVWXYZ" ..
+                "0123456789.,!?-+/():;%&`'*#=[]\""
+        )
+    )
 
-    players[PLAYER1] =
-    {
-        projectile = ProjectileManager.BLACK
-    }
-
-    players[PLAYER2] =
-    {
-        projectile = ProjectileManager.PINK
-    }
-
-    CURRENT_PLAYER = PLAYER1
-
+    -- Fix the drop algorithm to return offset x and y
     local y1, a1 = getTankDrop(150)
     local y2, a2 = getTankDrop(600)
 
     TankManager.create(TankManager.GREY, 150, y1, "right", a1, 0)
     TankManager.create(TankManager.GREY, 600, y2, "left", a2, 0)
+
+    players[PLAYER1] =
+    {
+        projectile = ProjectileManager.BLACK,
+        tank = TankManager.getPlayerTank(PLAYER1)
+    }
+
+    players[PLAYER2] =
+    {
+        projectile = ProjectileManager.PINK,
+        tank = TankManager.getPlayerTank(PLAYER2)
+    }
+
+    CURRENT_PLAYER = PLAYER1
 end
 
 function love.update(dt)
     if love.keyboard.isDown("q") then
-        TankManager.getPlayerTank(CURRENT_PLAYER):rotateBarrel("CCW", dt)
+        players[CURRENT_PLAYER].tank:rotateBarrel("CCW", dt)
     elseif love.keyboard.isDown("e") then
-        TankManager.getPlayerTank(CURRENT_PLAYER):rotateBarrel("CW", dt)
+        players[CURRENT_PLAYER].tank:rotateBarrel("CW", dt)
     end
 
     EntityManager.update(dt)
@@ -45,14 +52,17 @@ end
 
 function love.keypressed(k)
     if k == " " then
-        TankManager.getPlayerTank(CURRENT_PLAYER):shoot(players[CURRENT_PLAYER].projectile)
+        players[CURRENT_PLAYER].tank:shoot(players[CURRENT_PLAYER].projectile)
         switchPlayer()
     elseif k == "a" then
-        TankManager.getPlayerTank(CURRENT_PLAYER):adjustPower(1)
+        players[CURRENT_PLAYER].tank:adjustPower(1)
     elseif k == "z" then
-        TankManager.getPlayerTank(CURRENT_PLAYER):adjustPower(-1)
-    elseif k == 'escape' then
+        players[CURRENT_PLAYER].tank:adjustPower(-1)
+    elseif k == "escape" then
       love.event.quit()
+    elseif k == "left" or k == "right" then
+        players[CURRENT_PLAYER].projectile = (players[CURRENT_PLAYER].projectile)
+            % ProjectileManager.getNumOfProjectiles() + 1
     end
 end
 
@@ -61,48 +71,99 @@ function switchPlayer()
     CURRENT_PLAYER = CURRENT_PLAYER % 2 + 1
 end
 
+-- Draws the heads up display
 function drawHUD()
     local trans = 200
+    local startX = 0
+    local boxW = 220
+    local boxH = 75
+    local barW = 100
+    local cR = 20
+    local cP = 2
 
-    love.graphics.setColor(0, 0, 0, trans)
-    love.graphics.rectangle("fill", 550, 0, 250, 150)
+    love.graphics.print(love.timer.getFPS(), 760, 580)
 
-    love.graphics.setColor(255, 255, 255, trans)
-    love.graphics.print("Name", 555, 0)
-    love.graphics.print("HP", 555, 16)
+    for i = 1, 2, 1 do
+        local tank = players[i].tank
 
-    love.graphics.print("PW", 555, 32)
+        local hp = tank:getHp()
+        local hpRatio = hp / tank:getMaxHp()
 
-    local t2M = TankManager.getPlayerTank(CURRENT_PLAYER):getMaxHp()
-    local t2hp = TankManager.getPlayerTank(CURRENT_PLAYER):getHp()
-    local ratio = t2hp / t2M
+        local power = tank:getPower()
+        local powerRatio = power / tank:getMaxPower()
 
-    love.graphics.setColor(0, 240, 0, trans)
-    love.graphics.rectangle("fill", 580, 18, ratio * 100, 12)
+        local cX, cY = startX + 190, 27
 
-    love.graphics.setColor(240, 0, 0, trans)
-    love.graphics.rectangle("fill", 580 + 100 * ratio, 18, 100 - (ratio * 100), 12)
+        local b = tank:getAbsoluteBarrelAngle()
 
-    love.graphics.setColor(255, 255, 255, trans)
-    love.graphics.print(t2hp, 685, 16)
+        local proj = ProjectileManager.getData(players[i].projectile)
+        local projImg = TextureManager.getImage(proj.image)
 
-    local max = 40
-    local power = TankManager.getPlayerTank(CURRENT_PLAYER):getPower()
-    local ratio2 = power / max
+        -- The box
+        love.graphics.setColor(50, 50, 50, trans)
+        love.graphics.rectangle("fill", startX, 0, boxW, boxH)
 
-    love.graphics.setColor(0, 240, 0, trans)
-    love.graphics.rectangle("fill", 580, 34, ratio2 * 100, 12)
+        -- Player Name
+        love.graphics.setColor(255, 255, 255, trans)
+        love.graphics.print("Player " .. tank.player, startX + 7, 2)
 
-    love.graphics.setColor(240, 0, 0, trans)
-    love.graphics.rectangle("fill", 580 + 100 * ratio2, 34, 100 - (ratio2 * 100), 12)
+        -- Hp text
+        love.graphics.setColor(255, 255, 255, trans)
+        love.graphics.print("H", startX + 7, 18)
+        love.graphics.print(hp, startX + barW + 25, 18)
 
-    love.graphics.setColor(255, 255, 255, trans)
-    love.graphics.circle("line", 755, 40, 30)
-    love.graphics.line(755, 6, 755, 74)
-    love.graphics.line(723, 40, 788, 40)
+        -- Hp bar
+        love.graphics.setColor(0, 240, 0, trans)
+        love.graphics.rectangle("fill", startX + 20, 20, hpRatio * barW, 12)
+        love.graphics.setColor(240, 0, 0, trans)
+        love.graphics.rectangle("fill", startX + 20 + barW * hpRatio, 20,
+            barW - (hpRatio * barW), 12)
 
-    local b = math.rad(TankManager.getPlayerTank(CURRENT_PLAYER):getBarrelAngle())
-    love.graphics.setColor(255, 0, 0, trans)
-    love.graphics.line(755, 40, 755 + 34 * math.cos(b), 40 + 34 * math.sin(b))
+        -- Power text
+        love.graphics.setColor(255, 255, 255, trans)
+        love.graphics.print("P", startX + 7, 34)
+        love.graphics.print(round(powerRatio * 100), startX + barW + 25, 34)
 
+        -- Power bar
+        love.graphics.setColor(0, 240, 0, trans)
+        love.graphics.rectangle("fill", startX + 20, 36, powerRatio * barW, 12)
+        love.graphics.setColor(240, 0, 0, trans)
+        love.graphics.rectangle("fill", startX + 20 + barW * powerRatio, 36,
+            barW - (powerRatio * barW), 12)
+
+        -- Barrel angle graphic
+        love.graphics.setColor(255, 255, 255, trans)
+        love.graphics.circle("line", cX, cY, cR)
+        love.graphics.line(cX, cY - cR - cP, cX, cY + cR + cP)
+        love.graphics.line(cX - cR - cP, cY, cX + cR + cP, cY)
+        love.graphics.setColor(255, 0, 0, trans)
+        love.graphics.line(cX, cY, cX + (cR + cP) * math.cos(math.rad(b)),
+            cY + (cR + cP) * math.sin(math.rad(b)))
+
+        if i % 2 == 0 then
+            b = -(180 - b)
+        else
+            b = -b
+        end
+
+        love.graphics.setColor(255, 255, 255, trans)
+        love.graphics.print("A:" .. round(b), cX - cR - 10, cY + cR + 5)
+
+
+        -- Projectile stuff
+        love.graphics.setColor(255, 255, 255, trans)
+        love.graphics.polygon("fill", {
+            startX + 7, 60, startX + 14, 65, startX + 14, 55
+        })
+
+        love.graphics.draw(projImg, startX + 24 - projImg:getWidth() / 2,
+            60 - projImg:getHeight() / 2)
+
+        love.graphics.polygon("fill", {
+            startX + 40, 60, startX + 33, 65, startX + 33, 55
+        })
+
+        love.graphics.print("D:" .. proj.damage, startX + 50, 52)
+        startX = startX + 580
+    end
 end
