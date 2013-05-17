@@ -72,14 +72,22 @@ end
 
 -- Draws the heads up display
 function drawHUD()
+    -- Transparency
     local trans = 200
+    -- Start X
     local startX = 0
+    -- Width of the box
     local boxW = 220
+    -- Height of the box
     local boxH = 75
+    -- The total width of the hp and power bars
     local barW = 100
+    -- The radius of the circle
     local cR = 20
+    -- The padding of the lines outside of the circle
     local cP = 2
 
+    -- Draw FPS
     love.graphics.setColor(255, 255, 255, 255)
     love.graphics.print(love.timer.getFPS(), 760, 580)
 
@@ -140,12 +148,14 @@ function drawHUD()
         love.graphics.line(cX, cY, cX + (cR + cP) * math.cos(math.rad(b)),
             cY + (cR + cP) * math.sin(math.rad(b)))
 
+        -- Converts the absolute angle into relative angle
         if i % 2 == 0 then
             b = -(180 - b)
         else
             b = -b
         end
 
+        -- Angle text
         love.graphics.setColor(255, 255, 255, trans)
         love.graphics.print("A:" .. round(b), cX - cR - 10, cY + cR + 5)
 

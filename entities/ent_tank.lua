@@ -87,6 +87,8 @@ function tank:draw()
         self:drawBody()
     end
 
+    --self:drawProjectilePreview()
+
     -- love.graphics.setColor(255, 0, 0, 255)
     -- love.graphics.polygon("line", self:getBoundingPoly())
     -- love.graphics.circle("fill", self.x, self.y, 2)
@@ -114,6 +116,28 @@ function tank:drawBarrel()
         self.scale,
         self.barrelPivotOffset,
         self.barrelImage:getHeight() / 2)
+end
+
+function tank:drawProjectilePreview()
+    love.graphics.setColor(200, 0, 0, 100)
+
+    local px, py = self:getProjectileStartPos()
+
+    local vx = self.power * math.cos(math.rad(self:getAbsoluteBarrelAngle())) * METER_SIZE
+    local vy = self.power * math.sin(math.rad(self:getAbsoluteBarrelAngle())) * METER_SIZE
+
+    for i = 0, 1, 0.001 do
+        i = i * 1.3
+
+        vx = vx + WIND * i
+        vy = vy + GRAVITY * i
+
+        px = px + vx * i
+        py = py + vy * i
+
+        love.graphics.circle("fill", px, py, 2)
+    end
+
 end
 
 -- Rotates the barrel
@@ -210,8 +234,8 @@ end
 -- Gets the X and Y coordinates of the beginning of the barrel
 -- @return The barrel's position (int, int)
 function tank:getBarrelPos()
-    return self.x + math.cos(math.rad(self.angle)) * self.barrelOffsetX * self.direction * self.scale,
-        self.y + math.sin(math.rad(self.angle)) * self.barrelOffsetY * self.direction * self.scale
+    local ox, oy = self.barrelOffsetX, self.barrelOffsetY
+    return rotatePoint(self.x, self.y, self.angle, self.x + ox * self.direction, self.y + oy)
 end
 
 -- Gets the X and Y coordinate of where the projectile will start from
@@ -250,7 +274,13 @@ end
 function tank:shoot(projectile)
     if self:isAlive() then
         local px, py = self:getProjectileStartPos()
-        ProjectileManager.create(projectile, px, py, self.barrelAngle + self.angle, self.power, self)
+
+        ProjectileManager.create(projectile,
+            px,
+            py,
+            self:getAbsoluteBarrelAngle(),
+            self.power,
+            self)
     end
 end
 

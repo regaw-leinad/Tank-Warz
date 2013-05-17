@@ -8,6 +8,9 @@
 
 ProjectileManager = {}
 
+-- The multiplier of dt in physics
+local SPEED_SCALE = 1.3
+
 -- The pink projectile
 ProjectileManager.PINK = 1
 -- The black projectile
@@ -20,7 +23,7 @@ local projectiles =
     {
         image = "projectile_pink",
         scale = 1,
-        speedScale = 1,
+        speedScale = SPEED_SCALE,
         damage = 10
     },
 
@@ -28,7 +31,7 @@ local projectiles =
     {
         image = "projectile_black",
         scale = 1,
-        speedScale = 1,
+        speedScale = SPEED_SCALE,
         damage = 20
     }
 }
