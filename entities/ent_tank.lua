@@ -87,11 +87,13 @@ function tank:draw()
         self:drawBody()
     end
 
-    --self:drawProjectilePreview()
+    if DEBUG then
+        self:drawProjectilePreview()
 
-    -- love.graphics.setColor(255, 0, 0, 255)
-    -- love.graphics.polygon("line", self:getBoundingPoly())
-    -- love.graphics.circle("fill", self.x, self.y, 2)
+        love.graphics.setColor(255, 0, 0, 255)
+        love.graphics.polygon("line", self:getBoundingPoly())
+        love.graphics.circle("fill", self.x, self.y, 2)
+    end
 end
 
 function tank:drawBody()
@@ -126,16 +128,16 @@ function tank:drawProjectilePreview()
     local vx = self.power * math.cos(math.rad(self:getAbsoluteBarrelAngle())) * METER_SIZE
     local vy = self.power * math.sin(math.rad(self:getAbsoluteBarrelAngle())) * METER_SIZE
 
-    for i = 0, 1, 0.001 do
-        i = i * 1.3
+    local dt = 0.07
 
-        vx = vx + WIND * i
-        vy = vy + GRAVITY * i
-
-        px = px + vx * i
-        py = py + vy * i
-
+    for i = 0, .5, 0.01 do
         love.graphics.circle("fill", px, py, 2)
+
+        vx = vx + WIND * dt
+        vy = vy + GRAVITY * dt
+
+        px = px + vx * dt
+        py = py + vy * dt
     end
 
 end

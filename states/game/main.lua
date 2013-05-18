@@ -47,6 +47,12 @@ end
 function love.draw()
     EntityManager.draw()
     drawHUD()
+
+    if DEBUG then
+        -- Draw FPS
+        love.graphics.setColor(255, 255, 255, 255)
+        love.graphics.print(love.timer.getFPS(), 760, 580)
+    end
 end
 
 function love.keypressed(k)
@@ -86,10 +92,6 @@ function drawHUD()
     local cR = 20
     -- The padding of the lines outside of the circle
     local cP = 2
-
-    -- Draw FPS
-    love.graphics.setColor(255, 255, 255, 255)
-    love.graphics.print(love.timer.getFPS(), 760, 580)
 
     for i = 1, 2, 1 do
         local tank = players[i].tank

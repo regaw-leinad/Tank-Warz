@@ -87,11 +87,12 @@ function terrain:draw()
     love.graphics.setColor(255, 255, 255, 255)
     love.graphics.draw(self.terrain, 0, SCREEN_HEIGHT - self.terrain:getHeight() + 1)
 
-    -- love.graphics.setColor(0, 0, 0, 255)
-    -- love.graphics.polygon("line", self.coords)
-    -- love.graphics.setColor(255, 255, 255, 100)
-    -- love.graphics.polygon("fill", self.coords)
-
+    if DEBUG then
+        love.graphics.setColor(255, 0, 0, 255)
+        for _,pol in ipairs(self.cutPoly) do
+            love.graphics.polygon("line", pol)
+        end
+    end
 end
 
 -- Gets the table of coordinates that make up the terrain

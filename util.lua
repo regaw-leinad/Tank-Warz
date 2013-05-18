@@ -46,19 +46,20 @@ function polygonCut(midX, midY, poly)
     local count = 1
     local tCount = 1
 
-    t[tCount] = { poly[count], poly[count + 1], midX, midY, poly[#poly - 1], poly[#poly] }
-
-    tCount = tCount + 1
-
     while count < #poly - 4 do
         t[tCount] =
         {
             poly[count],
             poly[count + 1],
-            midX,
-            midY,
+
             poly[count + 2],
-            poly[count + 3]
+            poly[count + 3],
+
+            poly[count + 2],
+            SCREEN_HEIGHT,
+
+            poly[count],
+            SCREEN_HEIGHT
         }
 
         tCount = tCount + 1

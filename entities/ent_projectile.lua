@@ -66,6 +66,15 @@ function projectile:draw()
         self.scale,
         self.image:getWidth() / 2,
         self.image:getHeight() / 2)
+
+    if DEBUG then
+        love.graphics.setColor(255, 0, 0, 255)
+        love.graphics.rectangle("line",
+            self.x - self.image:getWidth() / 2,
+            self.y - self.image:getHeight() / 2,
+            self.image:getWidth(),
+            self.image:getHeight())
+    end
 end
 
 return projectile

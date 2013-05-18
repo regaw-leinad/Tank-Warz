@@ -6,6 +6,9 @@
         Dan Wager
 --]]
 
+-- Debug mode flag
+DEBUG = true
+
 -- The width of the screen
 SCREEN_WIDTH = 800
 -- The height of the screen
