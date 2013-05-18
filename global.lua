@@ -7,7 +7,7 @@
 --]]
 
 -- Debug mode flag
-DEBUG = true
+DEBUG = false
 
 -- The width of the screen
 SCREEN_WIDTH = 800

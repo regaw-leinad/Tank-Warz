@@ -121,7 +121,7 @@ function tank:drawBarrel()
 end
 
 function tank:drawProjectilePreview()
-    love.graphics.setColor(200, 0, 0, 100)
+    love.graphics.setColor(200, 0, 0, 255)
 
     local px, py = self:getProjectileStartPos()
 
@@ -130,8 +130,13 @@ function tank:drawProjectilePreview()
 
     local dt = 0.07
 
-    for i = 0, .5, 0.01 do
-        love.graphics.circle("fill", px, py, 2)
+    for i = 0, 10, 0.016 do
+
+        if not terrainCollide(px, py) then
+            love.graphics.circle("fill", px, py, 2)
+        else
+            break
+        end
 
         vx = vx + WIND * dt
         vy = vy + GRAVITY * dt

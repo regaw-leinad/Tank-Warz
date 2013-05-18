@@ -66,6 +66,8 @@ function love.keypressed(k)
     elseif k == "left" or k == "right" then
         players[CURRENT_PLAYER].projectile = (players[CURRENT_PLAYER].projectile)
             % ProjectileManager.getNumOfProjectiles() + 1
+    elseif k == "d" then
+        if DEBUG then DEBUG = false else DEBUG = true end
     elseif k == "escape" then
       love.event.quit()
     end
