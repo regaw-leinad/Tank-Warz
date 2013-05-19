@@ -38,6 +38,8 @@ function StateManager.startup(statePath)
     path = statePath or "states/"
     local folders = love.filesystem.enumerate(path)
 
+    print("Loading states...")
+
     for _,state in ipairs(folders) do
         if love.filesystem.isDirectory(path .. state) and love.filesystem.exists(path .. state .. "/main.lua") then
             states[state] = {}
@@ -45,7 +47,7 @@ function StateManager.startup(statePath)
             states[state].path = path .. state
             states[state].name = state
             states[state].data = love.filesystem.load(path .. state .. "/main.lua")
-            print("Registered state \'" .. state .. "\'")
+            print("  " .. state)
         end
     end
 end
