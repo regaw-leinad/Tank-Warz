@@ -43,11 +43,8 @@ function projectile:update(dt)
     self.x = self.x + self.vx * dt
     self.y = self.y + self.vy * dt
 
-    if terrainCollide(self.x, self.y) then
-        EntityManager.destroy(self.id)
-    end
-
-    if TankManager.getCount() > 0 and tankCollide(self.x, self.y, self.damage) then
+    if terrainCollide(self.x, self.y) or tankCollide(self.x, self.y, self.damage) then
+        AudioManager.play("boom")
         EntityManager.destroy(self.id)
     end
 

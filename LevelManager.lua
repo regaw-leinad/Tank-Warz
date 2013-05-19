@@ -22,7 +22,7 @@ local levels =
         skyTexture = nil,
         skyColor = { 0, 245, 255 },
         skyEntities = { ["cloud"] = 2 },
-        wind = 3,
+        wind = 0,
         gravity = 9.8
     },
 

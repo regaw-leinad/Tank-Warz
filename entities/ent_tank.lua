@@ -282,6 +282,8 @@ function tank:shoot(projectile)
     if self:isAlive() then
         local px, py = self:getProjectileStartPos()
 
+        AudioManager.play("shoot")
+
         ProjectileManager.create(projectile,
             px,
             py,

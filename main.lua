@@ -22,7 +22,5 @@ function love.load()
     require("TankManager")
     require("ProjectileManager")
 
-    AudioManager.play("splash")
-
-    --StateManager.load("game", { lvl = LevelManager.PEACEFUL })
+    StateManager.load("splash")
 end
