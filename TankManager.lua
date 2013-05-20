@@ -97,7 +97,7 @@ local function getTankDrop(x)
             local resultY = (x - leftX) * (rightY - leftY) / (rightX - leftX) + leftY
             local angle = math.atan2(rightY - leftY, rightX - leftX)
 
-            return x - dropBuf * math.sin(angle),
+            return x - dropBuf * -math.sin(angle),
                 resultY - dropBuf * math.cos(angle),
                 math.deg(angle)
         end

@@ -23,13 +23,15 @@ local id = 0
 -- @param entPath The entities directory (relative)
 function EntityManager.startup(entPath)
     path = entPath or "entities/"
-
     local files = love.filesystem.enumerate(path)
+
+    print("Loading entities...")
 
     for _,file in pairs(files) do
         if string.starts(file, prefix) then
             local name = file:gsub(prefix, ""):gsub(".lua", "")
             register[name] = love.filesystem.load(path .. file)
+            print("  " .. name)
         end
     end
 end

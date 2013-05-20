@@ -19,6 +19,7 @@ local levels =
     [LevelManager.PEACEFUL] =
     {
         terrainTexture = "terrain_dirt",
+        terrainHeightBuffer = 20,
         skyTexture = nil,
         skyColor = { 0, 245, 255 },
         skyEntities = { ["cloud"] = 2 },
@@ -29,6 +30,7 @@ local levels =
     [LevelManager.AHHH] =
     {
         terrainTexture = "terrain_dirt",
+        terrainHeightBuffer = 200,
         skyTexture = nil,
         skyColor = { 255, 0, 0 },
         skyEntities = { },
@@ -68,7 +70,8 @@ function LevelManager.load(lvl)
 
         EntityManager.create("terrain", true,
         {
-            texture = levels[lvl].terrainTexture
+            texture = levels[lvl].terrainTexture,
+            heightBuf = levels[lvl].terrainHeightBuffer
         })
 
         for ent,num in pairs(levels[lvl].skyEntities) do
