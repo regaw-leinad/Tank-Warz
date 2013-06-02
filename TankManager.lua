@@ -35,7 +35,7 @@ local tanks =
     {
         image = "tank_grey",
         imageW, imageH = TextureManager.getImageDimensions("tank_grey"),
-        barrelImage = "tank_grey_barrel",
+        barrelImage = "tank_grey_barrel1",
         barrelImageW, barrelImageH = TextureManager.getImageDimensions("tank_grey"),
         barrelOffsetX = 6,
         barrelOffsetY = -4,

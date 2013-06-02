@@ -130,13 +130,13 @@ function tank:drawProjectilePreview()
 
     local dt = 0.07
 
-    for i = 0, 10, 0.016 do
+    for i = 0, 200, 1 do
 
-        if not terrainCollide(px, py) then
-            love.graphics.circle("fill", px, py, 2)
-        else
+        if terrainCollide(px, py) then
             break
         end
+
+        love.graphics.circle("fill", px, py, 2)
 
         vx = vx + WIND * dt
         vy = vy + GRAVITY * dt

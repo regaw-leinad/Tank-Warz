@@ -35,10 +35,12 @@ function load(args)
 end
 
 function love.update(dt)
-    if love.keyboard.isDown("q") then
-        players[CURRENT_PLAYER].tank:rotateBarrel("CCW", dt)
-    elseif love.keyboard.isDown("e") then
-        players[CURRENT_PLAYER].tank:rotateBarrel("CW", dt)
+    if ProjectileManager.getCount() == 0 then
+        if love.keyboard.isDown("q") then
+            players[CURRENT_PLAYER].tank:rotateBarrel("CCW", dt)
+        elseif love.keyboard.isDown("e") then
+            players[CURRENT_PLAYER].tank:rotateBarrel("CW", dt)
+        end
     end
 
     EntityManager.update(dt)
@@ -56,20 +58,24 @@ function love.draw()
 end
 
 function love.keypressed(k)
-    if k == " " then
-        players[CURRENT_PLAYER].tank:shoot(players[CURRENT_PLAYER].projectile)
-        switchPlayer()
-    elseif k == "a" then
-        players[CURRENT_PLAYER].tank:adjustPower(1)
-    elseif k == "z" then
-        players[CURRENT_PLAYER].tank:adjustPower(-1)
-    elseif k == "left" or k == "right" then
-        players[CURRENT_PLAYER].projectile = (players[CURRENT_PLAYER].projectile)
-            % ProjectileManager.getNumOfProjectiles() + 1
+    if k == "escape" then
+        love.event.quit()
     elseif k == "d" then
         DEBUG = not DEBUG
-    elseif k == "escape" then
-      love.event.quit()
+    end
+
+    if ProjectileManager.getCount() == 0 then
+        if k == " " then
+            players[CURRENT_PLAYER].tank:shoot(players[CURRENT_PLAYER].projectile)
+            switchPlayer()
+        elseif k == "a" then
+            players[CURRENT_PLAYER].tank:adjustPower(1)
+        elseif k == "z" then
+            players[CURRENT_PLAYER].tank:adjustPower(-1)
+        elseif k == "left" or k == "right" then
+            players[CURRENT_PLAYER].projectile = (players[CURRENT_PLAYER].projectile)
+                % ProjectileManager.getNumOfProjectiles() + 1
+        end
     end
 end
 
@@ -134,7 +140,7 @@ function drawHUD()
         -- Power text
         love.graphics.setColor(255, 255, 255, trans)
         love.graphics.print("P", startX + 7, 34)
-        love.graphics.print(round(powerRatio * 100), startX + barW + 25, 34)
+        love.graphics.print(round(powerRatio * 100) .. "%", startX + barW + 25, 34)
 
         -- Power bar
         love.graphics.setColor(0, 240, 0, trans)

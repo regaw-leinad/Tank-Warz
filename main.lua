@@ -4,7 +4,6 @@ end
 
 --- Main love.load
 function love.load()
-    --inspect = require("inspect")
     require("collision")
     require("util")
 
@@ -12,6 +11,7 @@ function love.load()
     require("EntityManager")
     require("StateManager")
     require("AudioManager")
+    require("ButtonManager")
 
     StateManager.startup("states/")
     TextureManager.startup("textures/")
@@ -22,5 +22,5 @@ function love.load()
     require("TankManager")
     require("ProjectileManager")
 
-    StateManager.load("splash")
+    StateManager.load("mainMenu")
 end

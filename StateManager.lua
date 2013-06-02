@@ -41,12 +41,12 @@ function StateManager.startup(statePath)
     print("Loading states...")
 
     for _,state in ipairs(folders) do
-        if love.filesystem.isDirectory(path .. state) and love.filesystem.exists(path .. state .. "/main.lua") then
+        if love.filesystem.isDirectory(path .. state) and love.filesystem.exists(path .. state .. "/" .. state .. "_main.lua") then
             states[state] = {}
             states[state].loaded = false
             states[state].path = path .. state
             states[state].name = state
-            states[state].data = love.filesystem.load(path .. state .. "/main.lua")
+            states[state].data = love.filesystem.load(path .. state .. "/" .. state .. "_main.lua")
             print("  " .. state)
         end
     end

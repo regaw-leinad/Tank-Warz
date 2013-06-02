@@ -13,24 +13,56 @@ local button = EntityManager.derive("base")
       imageNormal - The normal image
       imageHover - The image when the mouse is hovering
       imagePressed - The image when the button is pressed
+      scale - The button scale
       onPressed - Function callback to run when pressed
 --]]
 function button:load(data)
     -- Init data if not passed so we don't have errors
     if not data then data = {} end
 
-    self.imageNormal = data.imageNormal
-    self.imageHover = data.imageHover or data.imageNormal
-    self.imagePressed = data.imagePressed or data.imageNormal
-    self.onPressed = onPressed
+    self:setPos(data.x, data.y)
+    self.imageNormal = TextureManager.getImage(data.imageNormal)
+    self.imageHover = TextureManager.getImage(data.imageHover)
+    self.imagePressed = TextureManager.getImage(data.imagePressed)
+
+    self.hover = false
+    self.scale = data.scale
+    self:setSize(TextureManager.getImageDimensions(data.imageNormal))
+    self.onPressed = data.onPressed
 end
 
 function button:update(dt)
+    local mx, my = love.mouse.getPosition()
+
+    if insideBox(mx, my, self.x - self.w / 2 * self.scale, self.y - self.h / 2 * self.scale,
+        self.w * self.scale, self.h * self.scale) then
+        self.hover = true
+    else
+        self.hover = false
+    end
 
 end
 
 function button:draw()
-
+    if self.hover then
+        love.graphics.draw(self.imageHover,
+            self.x,
+            self.y,
+            0,
+            self.scale,
+            self.scale,
+            self.w / 2,
+            self.h / 2)
+    else
+        love.graphics.draw(self.imageNormal,
+            self.x,
+            self.y,
+            0,
+            self.scale,
+            self.scale,
+            self.w / 2,
+            self.h / 2)
+    end
 end
 
 function button:onPressed()

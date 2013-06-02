@@ -16,5 +16,5 @@ function load()
 end
 
 function love.update(dt)
-    StateManager.load("game", { lvl = LevelManager.PEACEFUL })
+    StateManager.load("mainMenu", { lvl = LevelManager.PEACEFUL })
 end
