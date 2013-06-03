@@ -36,9 +36,13 @@ function tank:load(data)
     if dir == "left" then
         self.direction = -1
         self.angleOffset = 180
+        -- TEMPORARY AI TESTING
+        self.ai = ai.EASY
     else -- default to right
         self.direction = 1
         self.angleOffset = 0
+        -- TEMPORARY AI TESTING
+        self.ai = nil
     end
 
     -- Set properties
@@ -56,7 +60,7 @@ function tank:load(data)
     self.barrelSpeed = data.barrelSpeed or 50
     self.maxHp = data.maxHp or 100
     self.hp = data.hp or 100
-    self.player = EntityManager.getCount("tank") + 1
+    self.player = EntityManager.getCount("tank") + 1    
 
     self:setRelativeBarrelAngle(data.barrelAngle or 0)
 
@@ -113,7 +117,7 @@ function tank:drawBarrel()
     love.graphics.draw(self.barrelImage,
         bx,
         by,
-        math.rad(self.barrelAngle + self.angle),
+        math.rad(self:getAbsoluteBarrelAngle()),
         self.scale,
         self.scale,
         self.barrelPivotOffset,
@@ -238,6 +242,12 @@ function tank:adjustPower(n)
     end
 end
 
+-- Adjusts the shooting power to a value
+-- @param toPower Adjusts to this power
+function tank:adjustPowerTo(toPower)    
+    self:adjustPower(toPower - self.power)
+end
+
 -- Gets the X and Y coordinates of the beginning of the barrel
 -- @return The barrel's position (int, int)
 function tank:getBarrelPos()
@@ -251,10 +261,10 @@ function tank:getProjectileStartPos()
     local x, y = self:getBarrelPos()
 
     return
-        x + math.cos(math.rad(self.barrelAngle + self.angle)) * (self.barrelImage:getWidth() -
+        x + math.cos(math.rad(self:getAbsoluteBarrelAngle())) * (self.barrelImage:getWidth() -
             self.barrelPivotOffset * self.scale) * self.scale,
 
-        y + math.sin(math.rad(self.barrelAngle + self.angle)) * (self.barrelImage:getWidth() -
+        y + math.sin(math.rad(self:getAbsoluteBarrelAngle())) * (self.barrelImage:getWidth() -
             self.barrelPivotOffset * self.scale) * self.scale
 end
 
@@ -276,6 +286,12 @@ function tank:getMaxHp()
     return self.maxHp
 end
 
+-- Returns true if this tank has AI
+-- @return True if this tank has AI
+function tank:hasAI()
+    return self.ai
+end
+
 -- Shoots a projectile from the tank
 -- @param projectile The projectile
 function tank:shoot(projectile)
@@ -283,13 +299,38 @@ function tank:shoot(projectile)
         local px, py = self:getProjectileStartPos()
 
         AudioManager.play("shoot")
+        
+        if self:hasAI() then
+            local AIpower
+            local chosen = math.random(0, math.min(180, 270 - (self.angleOffset - self.angle)))
+                        
+            self:setRelativeBarrelAngle(chosen)
+            AIpower = calcAIPower(self.ai)
+
+            if DEBUG then
+                local file = io.open("aitest.txt", "a")
+
+                file:write("chosen = " .. chosen .. "\n")
+                file:write("barrelAngle = " .. self.barrelAngle .. "\n")
+                file:write("angle " .. self.angle .. "\n")
+                file:close()
+            end        
+
+            while AIpower < 0 or AIpower > self.maxPower do
+                self:setRelativeBarrelAngle(math.random(0, 180))
+                AIpower = calcAIPower(self.ai)
+            end
+
+            self:adjustPowerTo(AIpower)   
+        end
+        
 
         ProjectileManager.create(projectile,
-            px,
-            py,
-            self:getAbsoluteBarrelAngle(),
-            self.power,
-            self)
+                px,
+                py,
+                self:getAbsoluteBarrelAngle(),
+                self.power,
+                self)
     end
 end
 

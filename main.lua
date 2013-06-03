@@ -6,6 +6,7 @@ end
 function love.load()
     require("collision")
     require("util")
+    require("ai")
 
     require("TextureManager")
     require("EntityManager")

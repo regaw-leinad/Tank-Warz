@@ -82,6 +82,12 @@ end
 -- Switches the player from 1 -> 2 or 2 -> 1
 function switchPlayer()
     CURRENT_PLAYER = CURRENT_PLAYER % 2 + 1
+
+    -- temporarily want to veto shooting now
+    if CURRENT_PLAYER == 2 then
+        players[CURRENT_PLAYER].tank:shoot(players[CURRENT_PLAYER].projectile)
+        switchPlayer()
+    end
 end
 
 -- Draws the heads up display

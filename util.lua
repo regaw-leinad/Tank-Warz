@@ -143,12 +143,12 @@ end
 -- @param y The Y coordinate of the point
 -- @return Point x',y' after rotation (int, int)
 function rotatePoint(refX, refY, angle, x, y)
-    local fixX = x - refX
-    local fixY = y - refY
+    local fixedX = x - refX
+    local fixedY = y - refY
 
-    local resultX = fixX * math.cos(math.rad(angle)) - fixY *
+    local resultX = fixedX * math.cos(math.rad(angle)) - fixedY *
         math.sin(math.rad(angle)) + refX
-    local resultY = fixX * math.sin(math.rad(angle)) + fixY *
+    local resultY = fixedX * math.sin(math.rad(angle)) + fixedY *
         math.cos(math.rad(angle)) + refY
 
     return resultX, resultY
