@@ -38,7 +38,10 @@ function calcAIPower(ai)
 	-- assume AI is always Player 2
 	local tank1 = TankManager.getPlayerTank(1)
 	local tank2 = TankManager.getPlayerTank(2)
-	local angleOffset = aiTable[ai].angleOffset	
+	local angleOffset = aiTable[ai].angleOffset
+	-- magic formula
+	-- so the AI is less dumb when WIND is in effect
+	angleOffset = math.max((3 - ai)*7 - 3*WIND/METER_SIZE, 3 - ai)
 
 	local xSource, ySource = tank2:getBarrelPos()
 	local xTarget, yTarget = tank1:getBarrelPos()
@@ -59,8 +62,8 @@ function calcAIPower(ai)
 	-- because indeed these constants carry no meaning
 	-- other than reducing typing
 	local p = dy * math.cos(th) - dx * math.sin(th)
-	local q = dx * (GRAVITY/METER_SIZE) - dy * WIND
-	local r = q * math.cos(th) + p * WIND
+	local q = dx * (GRAVITY/METER_SIZE) - dy * (WIND/METER_SIZE)
+	local r = q * math.cos(th) + p * (WIND/METER_SIZE)
 
 	local power = dx * q * q / (2.0 * p * r )
 

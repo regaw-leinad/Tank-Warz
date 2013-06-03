@@ -311,6 +311,7 @@ function tank:shoot(projectile)
                 local file = io.open("aitest.txt", "a")
 
                 file:write("chosen = " .. chosen .. "\n")
+                file:write("limit = " .. (270 - (self.angleOffset + self.angle)) .. "\n")
                 file:write("barrelAngle = " .. self.barrelAngle .. "\n")
                 file:write("angle " .. self.angle .. "\n")
                 file:close()
@@ -326,11 +327,11 @@ function tank:shoot(projectile)
         
 
         ProjectileManager.create(projectile,
-                px,
-                py,
-                self:getAbsoluteBarrelAngle(),
-                self.power,
-                self)
+            px,
+            py,
+            self:getAbsoluteBarrelAngle(),
+            self.power,
+            self)
     end
 end
 
