@@ -8,6 +8,7 @@
 
 ai = {}
 
+ai.NONE = false
 ai.EASY = 1
 ai.MEDIUM = 2
 ai.PERFECT = 3
@@ -29,12 +30,11 @@ local aiTable =
 	{
 		angleOffset = 0
 	}
-
 }
 
 -- Find the absolute angle (degrees) of perfect shooting
 -- @param ai The level of AI
-function calcAIPower(ai)	
+function calcAIPower(ai)
 	-- assume AI is always Player 2
 	local tank1 = TankManager.getPlayerTank(1)
 	local tank2 = TankManager.getPlayerTank(2)
@@ -49,11 +49,11 @@ function calcAIPower(ai)
 	local th = tank2:getAbsoluteBarrelAngle()
 
 	local dx = (xTarget - xSource) * METER_SIZE
-	local dy = (yTarget - ySource) * METER_SIZE	
-	th = math.random(th - angleOffset, th + angleOffset)	
+	local dy = (yTarget - ySource) * METER_SIZE
+	th = math.random(th - angleOffset, th + angleOffset)
 	th = math.rad(th)
 	-- wind acceleration is WIND
-	-- gravity acceleration is GRAVITY	
+	-- gravity acceleration is GRAVITY
 
 	-- magical constants used in the formula
 	-- these were found in the process of derivation
@@ -77,24 +77,22 @@ function calcAIPower(ai)
 	end
 
 	power = power / METER_SIZE
-	
+
 	if DEBUG then
 		---[[
-		local file = io.open("aitest.txt", "a")
-
-		file:write("angleOffset = " .. angleOffset .."\n")
-		file:write("x,y source = " .. xSource .. ", " .. ySource .."\n")
-		file:write("x,y target = " .. xTarget .. ", " .. yTarget .."\n")
-		file:write("th = " .. math.deg(th) .."\n")		
-		file:write("dx = " .. dx .."\n")
-		file:write("dy = " .. dy .."\n")		
-		file:write("" .."\n")
-		file:write("p = " .. p .."\n")
-		file:write("q = " .. q .."\n")
-		file:write("r = " .. r .."\n")		
-		file:write("power = " .. power .."\n")
-		file:write("" .."\n")
-		file:close()
+		print("AI Testing: calculating power")
+		print("angleOffset = " .. angleOffset)
+		print("x,y source = " .. xSource .. ", " .. ySource)
+		print("x,y target = " .. xTarget .. ", " .. yTarget)
+		print("th = " .. math.deg(th))
+		print("dx = " .. dx)
+		print("dy = " .. dy)
+		print("")
+		print("p = " .. p)
+		print("q = " .. q)
+		print("r = " .. r)
+		print("power = " .. power)
+		print()
 		--]]
 	end
 

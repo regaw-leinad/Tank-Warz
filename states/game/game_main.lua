@@ -1,9 +1,18 @@
 -- Main game state
 local players = {}
 
+-- args
+--   lvl
+--   player1
+--     tank
+--   player2
+--     tank
+--     ai
+
 function load(args)
     -- Load level
     LevelManager.load(args.lvl)
+
     -- Set font
     love.graphics.setFont(
         love.graphics.newImageFont(
@@ -15,8 +24,8 @@ function load(args)
     )
 
     -- Create tanks
-    TankManager.create(TankManager.GREY, 40, SCREEN_WIDTH / 2 - 40, "right")
-    TankManager.create(TankManager.GREY, SCREEN_WIDTH / 2 + 40, SCREEN_WIDTH - 40, "left")
+    TankManager.create(args.player1.tank, 40, SCREEN_WIDTH / 2 - 40, "right")
+    TankManager.create(args.player2.tank, SCREEN_WIDTH / 2 + 40, SCREEN_WIDTH - 40, "left", args.player2.ai)
 
     -- Init player data
     players[PLAYER1] =
@@ -26,7 +35,7 @@ function load(args)
     }
     players[PLAYER2] =
     {
-        projectile = ProjectileManager.PINK,
+        projectile = ProjectileManager.BLACK,
         tank = TankManager.getPlayerTank(PLAYER2)
     }
 

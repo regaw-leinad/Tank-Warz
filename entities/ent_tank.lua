@@ -36,13 +36,9 @@ function tank:load(data)
     if dir == "left" then
         self.direction = -1
         self.angleOffset = 180
-        -- TEMPORARY AI TESTING
-        self.ai = ai.EASY
     else -- default to right
         self.direction = 1
         self.angleOffset = 0
-        -- TEMPORARY AI TESTING
-        self.ai = nil
     end
 
     -- Set properties
@@ -60,7 +56,8 @@ function tank:load(data)
     self.barrelSpeed = data.barrelSpeed or 50
     self.maxHp = data.maxHp or 100
     self.hp = data.hp or 100
-    self.player = EntityManager.getCount("tank") + 1    
+    self.player = EntityManager.getCount("tank") + 1
+    self.ai = data.ai
 
     self:setRelativeBarrelAngle(data.barrelAngle or 0)
 
@@ -244,7 +241,7 @@ end
 
 -- Adjusts the shooting power to a value
 -- @param toPower Adjusts to this power
-function tank:adjustPowerTo(toPower)    
+function tank:adjustPowerTo(toPower)
     self:adjustPower(toPower - self.power)
 end
 
@@ -289,7 +286,7 @@ end
 -- Returns true if this tank has AI
 -- @return True if this tank has AI
 function tank:hasAI()
-    return self.ai
+    return self.ai or false
 end
 
 -- Shoots a projectile from the tank
@@ -298,33 +295,30 @@ function tank:shoot(projectile)
     if self:isAlive() then
         local px, py = self:getProjectileStartPos()
 
-        AudioManager.play("shoot")
-        
         if self:hasAI() then
             local AIpower
             local chosen = math.random(0, math.min(180, 270 - (self.angleOffset - self.angle)))
-                        
+
             self:setRelativeBarrelAngle(chosen)
             AIpower = calcAIPower(self.ai)
 
             if DEBUG then
-                local file = io.open("aitest.txt", "a")
-
-                file:write("chosen = " .. chosen .. "\n")
-                file:write("limit = " .. (270 - (self.angleOffset + self.angle)) .. "\n")
-                file:write("barrelAngle = " .. self.barrelAngle .. "\n")
-                file:write("angle " .. self.angle .. "\n")
-                file:close()
-            end        
+                print("chosen = " .. chosen .. "\n")
+                print("limit = " .. (270 - (self.angleOffset + self.angle)) .. "\n")
+                print("barrelAngle = " .. self.barrelAngle .. "\n")
+                print("angle " .. self.angle .. "\n")
+                print("")
+            end
 
             while AIpower < 0 or AIpower > self.maxPower do
                 self:setRelativeBarrelAngle(math.random(0, 180))
                 AIpower = calcAIPower(self.ai)
             end
 
-            self:adjustPowerTo(AIpower)   
+            self:adjustPowerTo(AIpower)
         end
-        
+
+        AudioManager.play("shoot")
 
         ProjectileManager.create(projectile,
             px,

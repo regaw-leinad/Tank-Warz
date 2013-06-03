@@ -116,14 +116,16 @@ end
 -- @param xMin The minimum X coordinate of the tank
 -- @param xMax The maximum X coordinate of the tank
 -- @param direction The direction of the tank
+-- @param ai The Ai
 -- @return The tank entity
-function TankManager.create(tank, xMin, xMax, direction)
+function TankManager.create(tank, xMin, xMax, direction, ai)
     if tanks[tank] then
         local tankData = get(tank)
 
         tankData.x, tankData.y, tankData.angle = getTankDrop(math.random(xMin, xMax))
         tankData.direction = direction
         tankData.barrelAngle = 0
+        tankData.ai = ai or ai.NONE
 
         return EntityManager.create("tank", false, tankData)
     else
