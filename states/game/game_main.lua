@@ -9,6 +9,8 @@ local players = {}
 --     tank
 --     ai
 
+local currenAiTimer = 1
+
 function load(args)
     -- Load level
     LevelManager.load(args.lvl)
@@ -24,8 +26,8 @@ function load(args)
     )
 
     -- Create tanks
-    TankManager.create(args.player1.tank, 40, SCREEN_WIDTH / 2 - 40, "right")
-    TankManager.create(args.player2.tank, SCREEN_WIDTH / 2 + 40, SCREEN_WIDTH - 40, "left", args.player2.ai)
+    TankManager.create(args.p1.tank, 40, SCREEN_WIDTH / 2 - 40, "right")
+    TankManager.create(args.p2.tank, SCREEN_WIDTH / 2 + 40, SCREEN_WIDTH - 40, "left", args.p2.ai)
 
     -- Init player data
     players[PLAYER1] =
@@ -41,10 +43,30 @@ function load(args)
 
     -- Set current player
     CURRENT_PLAYER = PLAYER1
+
+    AudioManager.setLooping("menu", false)
+    fade = 1
+    AudioManager.play("game", 0, true)
 end
 
 function love.update(dt)
-    if ProjectileManager.getCount() == 0 then
+
+    if fade >= 0 then
+        fade = fade - dt / 7
+        crossFade("menu", "game", fade)
+    end
+
+    if ProjectileManager.getCount() == 0 and players[CURRENT_PLAYER].tank:hasAI() then
+        currenAiTimer = currenAiTimer - dt
+
+        if currenAiTimer <= 0 then
+            currenAiTimer = math.random(1, 2)
+            players[CURRENT_PLAYER].tank:shoot(players[CURRENT_PLAYER].projectile)
+            switchPlayer()
+        end
+    end
+
+    if ProjectileManager.getCount() == 0 and not players[CURRENT_PLAYER].tank:hasAI() then
         if love.keyboard.isDown("q") then
             players[CURRENT_PLAYER].tank:rotateBarrel("CCW", dt)
         elseif love.keyboard.isDown("e") then
@@ -53,6 +75,12 @@ function love.update(dt)
     end
 
     EntityManager.update(dt)
+
+    for _,tank in pairs(EntityManager.getAll("tank")) do
+        if not tank:isAlive() then
+            StateManager.load("winner", { winner = CURRENT_PLAYER % 2 + 1 })
+        end
+    end
 end
 
 function love.draw()
@@ -67,13 +95,11 @@ function love.draw()
 end
 
 function love.keypressed(k)
-    if k == "escape" then
-        love.event.quit()
-    elseif k == "d" then
+    if k == "d" then
         DEBUG = not DEBUG
     end
 
-    if ProjectileManager.getCount() == 0 then
+    if ProjectileManager.getCount() == 0 and not players[CURRENT_PLAYER].tank:hasAI() then
         if k == " " then
             players[CURRENT_PLAYER].tank:shoot(players[CURRENT_PLAYER].projectile)
             switchPlayer()
@@ -91,12 +117,6 @@ end
 -- Switches the player from 1 -> 2 or 2 -> 1
 function switchPlayer()
     CURRENT_PLAYER = CURRENT_PLAYER % 2 + 1
-
-    -- temporarily want to veto shooting now
-    if CURRENT_PLAYER == 2 then
-        players[CURRENT_PLAYER].tank:shoot(players[CURRENT_PLAYER].projectile)
-        switchPlayer()
-    end
 end
 
 -- Draws the heads up display

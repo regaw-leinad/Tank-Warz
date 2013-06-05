@@ -6,27 +6,27 @@
 		Daniel Rolandi
 --]]
 
-ai = {}
+AI = {}
 
-ai.NONE = false
-ai.EASY = 1
-ai.MEDIUM = 2
-ai.PERFECT = 3
+AI.NONE = false
+AI.EASY = 1
+AI.MEDIUM = 2
+AI.PERFECT = 3
 
 -- angleOffset is given in degrees
 local aiTable =
 {
-	[ai.EASY] =
+	[AI.EASY] =
 	{
 		angleOffset = 14
 	},
 
-	[ai.MEDIUM] =
+	[AI.MEDIUM] =
 	{
 		angleOffset = 7
 	},
 
-	[ai.PERFECT] =
+	[AI.PERFECT] =
 	{
 		angleOffset = 0
 	}
@@ -34,7 +34,7 @@ local aiTable =
 
 -- Find the absolute angle (degrees) of perfect shooting
 -- @param ai The level of AI
-function calcAIPower(ai)
+function AI.calcAIPower(ai)
 	-- assume AI is always Player 2
 	local tank1 = TankManager.getPlayerTank(1)
 	local tank2 = TankManager.getPlayerTank(2)
@@ -43,7 +43,7 @@ function calcAIPower(ai)
 	-- so the AI is less dumb when WIND is in effect
 	angleOffset = math.max((3 - ai)*7 - 3*WIND/METER_SIZE, 3 - ai)
 
-	local xSource, ySource = tank2:getBarrelPos()
+	local xSource, ySource = tank2:getProjectileStartPos()
 	local xTarget, yTarget = tank1:getBarrelPos()
 	-- th is short for theta
 	local th = tank2:getAbsoluteBarrelAngle()

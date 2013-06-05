@@ -9,9 +9,9 @@
 TankManager = {}
 
 -- The red tank
-TankManager.RED = 1
+TankManager.RED = 2
 -- Ian's grey tank
-TankManager.GREY = 2
+TankManager.GREY = 1
 
 -- Table of tanks with values
 local tanks =
@@ -40,12 +40,11 @@ local tanks =
         barrelOffsetX = 6,
         barrelOffsetY = -4,
         barrelPivotOffset = 9,
-        barrelOnTop = false,
         scale = 1,
         power = 20,
         barrelSpeed = 50,
-        maxHp = 200,
-        hp = 200
+        maxHp = 20,
+        hp = 20
     }
 }
 
@@ -125,7 +124,7 @@ function TankManager.create(tank, xMin, xMax, direction, ai)
         tankData.x, tankData.y, tankData.angle = getTankDrop(math.random(xMin, xMax))
         tankData.direction = direction
         tankData.barrelAngle = 0
-        tankData.ai = ai or ai.NONE
+        tankData.ai = ai or AI.NONE
 
         return EntityManager.create("tank", false, tankData)
     else

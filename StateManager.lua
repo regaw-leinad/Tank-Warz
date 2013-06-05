@@ -56,7 +56,8 @@ end
 -- @param state The state name
 -- @param args A table of arguments to pass to the state
 function StateManager.load(state, args)
-    if states[state] then
+    if states[state].name then
+        StateManager.destroy(state)
         clearLove()
         currentState = state
         states[state].loaded = true
@@ -82,7 +83,7 @@ end
 -- Destroys (resets) a state
 -- @param state The state name
 function StateManager.destroy(state)
-    if states[state] and states[state].loaded then
+    if states[state] then
         if state == currentState then
             clearLove()
             currentState = nil

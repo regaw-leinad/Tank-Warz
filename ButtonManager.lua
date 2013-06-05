@@ -15,6 +15,7 @@ ButtonManager.BACK = 4
 ButtonManager.NEXT = 5
 ButtonManager.ARROW_R = 6
 ButtonManager.ARROW_L = 7
+ButtonManager.MENU = 8
 
 -- Table of buttons with values
 local buttons =
@@ -31,6 +32,48 @@ local buttons =
         imageNormal = "btn_quit_n",
         imageHover = "btn_quit_h",
         imagePressed = "btn_quit_p"
+    },
+
+    [ButtonManager.CONTROLS] =
+    {
+        imageNormal = "btn_controls_n",
+        imageHover = "btn_controls_h",
+        imagePressed = "btn_controls_p"
+    },
+
+    [ButtonManager.BACK] =
+    {
+        imageNormal = "btn_back_n",
+        imageHover = "btn_back_h",
+        imagePressed = "btn_back_p"
+    },
+
+    [ButtonManager.NEXT] =
+    {
+        imageNormal = "btn_next_n",
+        imageHover = "btn_next_h",
+        imagePressed = "btn_next_p"
+    },
+
+    [ButtonManager.ARROW_R] =
+    {
+        imageNormal = "btn_arrow_r_n",
+        imageHover = "btn_arrow_r_h",
+        imagePressed = "btn_arrow_r_p"
+    },
+
+    [ButtonManager.ARROW_L] =
+    {
+        imageNormal = "btn_arrow_l_n",
+        imageHover = "btn_arrow_l_h",
+        imagePressed = "btn_arrow_l_p"
+    },
+
+    [ButtonManager.MENU] =
+    {
+        imageNormal = "btn_menu_n",
+        imageHover = "btn_menu_h",
+        imagePressed = "btn_menu_p"
     }
 }
 
@@ -80,6 +123,7 @@ end
 function ButtonManager.press()
     for _,btn in ipairs(EntityManager.getAll("button")) do
         if btn.hover then
+            AudioManager.play("press")
             btn:onPressed()
             return
         end

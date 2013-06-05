@@ -57,7 +57,7 @@ function tank:load(data)
     self.maxHp = data.maxHp or 100
     self.hp = data.hp or 100
     self.player = EntityManager.getCount("tank") + 1
-    self.ai = data.ai
+    self.ai = data.ai or false
 
     self:setRelativeBarrelAngle(data.barrelAngle or 0)
 
@@ -283,40 +283,27 @@ function tank:getMaxHp()
     return self.maxHp
 end
 
--- Returns true if this tank has AI
--- @return True if this tank has AI
+-- If the tank is controlled by AI
+-- @return If the tank is controlled by AI
 function tank:hasAI()
-    return self.ai or false
+    return self.ai
 end
 
 -- Shoots a projectile from the tank
 -- @param projectile The projectile
 function tank:shoot(projectile)
     if self:isAlive() then
-        local px, py = self:getProjectileStartPos()
-
         if self:hasAI() then
-            local AIpower
-            local chosen = math.random(0, math.min(180, 270 - (self.angleOffset - self.angle)))
-
-            self:setRelativeBarrelAngle(chosen)
-            AIpower = calcAIPower(self.ai)
-
-            if DEBUG then
-                print("chosen = " .. chosen .. "\n")
-                print("limit = " .. (270 - (self.angleOffset + self.angle)) .. "\n")
-                print("barrelAngle = " .. self.barrelAngle .. "\n")
-                print("angle " .. self.angle .. "\n")
-                print("")
-            end
+            local AIpower = -1
 
             while AIpower < 0 or AIpower > self.maxPower do
-                self:setRelativeBarrelAngle(math.random(0, 180))
-                AIpower = calcAIPower(self.ai)
+                self:setRelativeBarrelAngle(math.random(0, math.min(180, 270 - (self.angleOffset - self.angle))))
+                AIpower = AI.calcAIPower(self.ai)
+                self.power = AIpower
             end
-
-            self:adjustPowerTo(AIpower)
         end
+
+        local px, py = self:getProjectileStartPos()
 
         AudioManager.play("shoot")
 

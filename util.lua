@@ -153,3 +153,28 @@ function rotatePoint(refX, refY, angle, x, y)
 
     return resultX, resultY
 end
+
+function osType()
+    local ps = package.config:sub(1, 1)
+
+    if ps == "/" then
+        return "UNIX"
+    elseif ps == "\\" then
+        return "WINDOWS"
+    else
+        return "UNKNOWN"
+    end
+end
+
+-- Cross fades 2 audio files
+-- @param fadeOut The audio to fade out
+-- @param fadeIn The audio to fade in
+-- @param outVol The current volume in the fade (dt / x)
+function crossFade(fadeOut, fadeIn, outVol)
+    AudioManager.setVolume(fadeOut, outVol)
+    AudioManager.setVolume(fadeIn, 1 - outVol)
+
+    if outVol <= 0 then
+        AudioManager.stop(fadeOut)
+    end
+end

@@ -23,9 +23,9 @@ function button:load(data)
     self:setPos(data.x, data.y)
     self.imageNormal = TextureManager.getImage(data.imageNormal)
     self.imageHover = TextureManager.getImage(data.imageHover)
-    self.imagePressed = TextureManager.getImage(data.imagePressed)
 
     self.hover = false
+    self.hoverSound = true
     self.scale = data.scale
     self:setSize(TextureManager.getImageDimensions(data.imageNormal))
     self.onPressed = data.onPressed
@@ -37,13 +37,21 @@ function button:update(dt)
     if insideBox(mx, my, self.x - self.w / 2 * self.scale, self.y - self.h / 2 * self.scale,
         self.w * self.scale, self.h * self.scale) then
         self.hover = true
+
+        if self.hoverSound then
+            AudioManager.play("hover")
+            self.hoverSound = false
+        end
     else
         self.hover = false
+        self.hoverSound = true
     end
 
 end
 
 function button:draw()
+    love.graphics.setColor(255, 255, 255, 255)
+
     if self.hover then
         love.graphics.draw(self.imageHover,
             self.x,

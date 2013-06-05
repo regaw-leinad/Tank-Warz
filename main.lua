@@ -23,5 +23,5 @@ function love.load()
     require("TankManager")
     require("ProjectileManager")
 
-    StateManager.load("mainMenu")
+    StateManager.load("mainMenu", { winner = 1 })
 end
