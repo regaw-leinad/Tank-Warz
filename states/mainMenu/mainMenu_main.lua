@@ -19,6 +19,9 @@ function load(args)
         AudioManager.play("menu", 1, true)
     end
 
+    shouldFade = args.shouldFade or false
+    fade = 1
+
     bg = TextureManager.getImage("menu_background")
     logo = TextureManager.getImage("logo")
     nscc = TextureManager.getImage("nscc_logo")
@@ -30,6 +33,11 @@ function load(args)
 end
 
 function love.update(dt)
+    if shouldFade and fade >= 0 then
+        fade = fade - dt / 3
+        crossFade("game", "menu", fade)
+    end
+
     EntityManager.update(dt)
 end
 

@@ -50,7 +50,6 @@ function load(args)
 end
 
 function love.update(dt)
-
     if fade >= 0 then
         fade = fade - dt / 7
         crossFade("menu", "game", fade)
@@ -97,6 +96,8 @@ end
 function love.keypressed(k)
     if k == "d" then
         DEBUG = not DEBUG
+    elseif k == "escape" then
+        StateManager.load("mainMenu", { shouldFade = true })
     end
 
     if ProjectileManager.getCount() == 0 and not players[CURRENT_PLAYER].tank:hasAI() then

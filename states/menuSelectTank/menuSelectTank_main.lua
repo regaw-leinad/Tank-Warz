@@ -50,7 +50,7 @@ function load(args)
     -- Assign init values for players
     player1.tank = currentTank1
     player2.tank = currentTank2
-    player2.ai = AI.EASY
+    player2.ai = AI.NONE
 
     titleFont = love.graphics.newFont(60)
     playerFont = love.graphics.newFont(28)

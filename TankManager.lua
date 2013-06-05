@@ -43,8 +43,8 @@ local tanks =
         scale = 1,
         power = 20,
         barrelSpeed = 50,
-        maxHp = 20,
-        hp = 20
+        maxHp = 200,
+        hp = 200
     }
 }
 
