@@ -23,7 +23,7 @@ local id = 0
 -- @param entPath The entities directory (relative)
 function EntityManager.startup(entPath)
     path = entPath or "entities/"
-    local files = love.filesystem.enumerate(path)
+    local files = love.filesystem.getDirectoryItems(path)
 
     print("Loading entities...")
 

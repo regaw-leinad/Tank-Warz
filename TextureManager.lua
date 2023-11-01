@@ -27,7 +27,7 @@ local function texturize(target, texture)
         if r + g + b == 0 then -- black, no texture
             -- Don't need the 0's anymore,
             -- defaults to 0 if not passed
-            return --0, 0, 0, 0
+            return r, g, b, a
         else -- non-black, we apply the texture here
             -- Get the cooresponding pixel from the texture
             return texture:getPixel(x % texture:getWidth(), y % texture:getHeight())
@@ -35,7 +35,7 @@ local function texturize(target, texture)
     end
 
     -- Get the image data from the canvas
-    local id = target:getImageData()
+    local id = target:newImageData()
 
     -- Apply the transform
     id:mapPixel(pixelFunction)
@@ -47,7 +47,7 @@ end
 -- Loads and registers all valid textures from the texture directory
 local function loadAll()
     if love.filesystem.exists(path) then
-        local files = love.filesystem.enumerate(path)
+        local files = love.filesystem.getDirectoryItems(path)
 
         print("Loading textures...")
 

@@ -4,7 +4,7 @@ local player1 = {}
 local player2 = {}
 local currentTank1 = TankManager.GREY
 local currentTank2 = TankManager.GREY
-local p2AI = false
+local p2AI = true
 
 local function onPlay()
     local args =
@@ -50,7 +50,7 @@ function load(args)
     -- Assign init values for players
     player1.tank = currentTank1
     player2.tank = currentTank2
-    player2.ai = AI.NONE
+    player2.ai = p2AI and AI.MEDIUM or AI.NONE
 
     titleFont = love.graphics.newFont(60)
     playerFont = love.graphics.newFont(28)

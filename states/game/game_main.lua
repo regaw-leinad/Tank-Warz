@@ -101,7 +101,7 @@ function love.keypressed(k)
     end
 
     if ProjectileManager.getCount() == 0 and not players[CURRENT_PLAYER].tank:hasAI() then
-        if k == " " then
+        if k == "space" then
             players[CURRENT_PLAYER].tank:shoot(players[CURRENT_PLAYER].projectile)
             switchPlayer()
         elseif k == "a" then

@@ -36,7 +36,7 @@ end
 -- @param statePath The states directory (relative)
 function StateManager.startup(statePath)
     path = statePath or "states/"
-    local folders = love.filesystem.enumerate(path)
+    local folders = love.filesystem.getDirectoryItems(path)
 
     print("Loading states...")
 

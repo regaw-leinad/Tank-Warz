@@ -21,7 +21,7 @@ local prefix = "aud_"
 -- Loads and registers all valid audio files from the texture directory
 local function loadAll()
     if love.filesystem.exists(path) then
-        local files = love.filesystem.enumerate(path)
+        local files = love.filesystem.getDirectoryItems(path)
 
         print("Loading audio...")
 
@@ -49,7 +49,7 @@ end
 function AudioManager.play(name, vol, loop)
     if audio[name] then
         if not playing[name] then
-            playing[name] = love.audio.newSource(audio[name].path)
+            playing[name] = love.audio.newSource(audio[name].path, loop and "stream" or "static")
         end
 
         playing[name]:setVolume(vol or 1)
